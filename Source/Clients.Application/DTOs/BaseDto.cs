@@ -1,4 +1,4 @@
-﻿namespace Clients.SqlServer.DTOs
+﻿namespace Clients.Application.DTOs
 {
     /// <summary>
     /// Represents a model with the minimum information.
