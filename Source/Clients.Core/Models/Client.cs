@@ -1,4 +1,5 @@
 ﻿using System;
+using Clients.Core.Entities;
 
 namespace Clients.Core.Models
 {

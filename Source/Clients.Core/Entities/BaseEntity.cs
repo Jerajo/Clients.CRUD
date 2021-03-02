@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Clients.Core.Models
+namespace Clients.Core.Entities
 {
     public abstract class BaseEntity<T> : Contracts.Entity<T>
     {
