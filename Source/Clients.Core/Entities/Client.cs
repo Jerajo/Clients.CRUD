@@ -1,7 +1,6 @@
 ﻿using System;
-using Clients.Core.Entities;
 
-namespace Clients.Core.Models
+namespace Clients.Core.Entities
 {
     /// <summary>
     /// Represents a costumer for the business.
