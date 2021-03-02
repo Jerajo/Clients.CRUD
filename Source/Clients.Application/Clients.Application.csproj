@@ -1,0 +1,29 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+    <AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
+    <OutputPath>../../temp_data/bin/$(Configuration)/$(AssemblyName)</OutputPath>
+  </PropertyGroup>
+
+  <PropertyGroup Condition=" '$(Configuration)' == '' Or '$(Configuration)' == 'Debug'">
+    <EnvironmentName>Development</EnvironmentName>
+  </PropertyGroup>
+
+  <PropertyGroup Condition=" '$(Configuration)' != '' AND '$(Configuration)' == 'Production' ">
+    <EnvironmentName>Production</EnvironmentName>
+  </PropertyGroup>
+
+  <PropertyGroup Condition=" '$(Configuration)' != '' AND '$(Configuration)' == 'MOCK' ">
+    <EnvironmentName>MOCK</EnvironmentName>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Clients.Core\Clients.Core.csproj" />
+  </ItemGroup>
+
+</Project>
