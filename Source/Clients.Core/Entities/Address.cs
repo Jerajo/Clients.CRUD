@@ -1,4 +1,6 @@
 ﻿using System;
+using System.ComponentModel.DataAnnotations.Schema;
+using Newtonsoft.Json;
 
 namespace Clients.Core.Entities
 {
@@ -40,6 +42,10 @@ namespace Clients.Core.Entities
         /// <summary>
         /// Lazily loads the address's owner.
         /// </summary>
+        ///
+        [JsonIgnore]
+        [ForeignKey("ClientId")]
         public virtual Client Client { get; set; }
+        public Guid ClientId { get; set; }
     }
 }
