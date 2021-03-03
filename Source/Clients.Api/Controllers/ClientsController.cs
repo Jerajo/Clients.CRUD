@@ -25,7 +25,7 @@ namespace Clients.Api.Controllers
             return Ok(clients);
         }
 
-        [HttpGet]
+        [HttpGet("{clientId}")]
         public IActionResult GetClientById([FromRoute, FromQuery] Guid clientId)
         {
             if (clientId == Guid.Empty)
@@ -47,8 +47,14 @@ namespace Clients.Api.Controllers
             Guard.Against.Null(clientDto, nameof(clientDto));
 
             var createClient = _commandFactory.MakeCommand<CreateClientCommand>();
-
-            createClient.Execute(clientDto);
+            try
+            {
+                createClient.Execute(clientDto);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
 
             return Ok();
         }
@@ -61,7 +67,14 @@ namespace Clients.Api.Controllers
             Guard.Against.Null(clientDto, nameof(clientDto));
 
             var updateClient = _commandFactory.MakeCommand<UpdateClientCommand>();
-            updateClient.Execute(clientDto);
+            try
+            {
+                updateClient.Execute(clientDto);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
 
             return Ok();
         }
@@ -73,7 +86,14 @@ namespace Clients.Api.Controllers
                 return BadRequest();
 
             var deleteClient = _commandFactory.MakeCommand<DeleteClientCommand>();
-            deleteClient.Execute(clientId);
+            try
+            {
+                deleteClient.Execute(clientId);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
 
             return Ok();
         }
