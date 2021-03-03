@@ -1,5 +1,5 @@
 # Clients CRUD example (.NET Core + Vue.js)
-Example project for the demonstration of a basic clients API with full CRUD access to the database and it's web client application on Vue.js.
+A example project with an API and a web client application.
 
 ## Project Setup
 ### Prerequisites
@@ -21,15 +21,13 @@ In the root directory of the repository. Open a command prompt of your choice an
   cd Source/
   dotnet tool install --global dotnet-ef
   dotnet build
-  dotnet ef database update --project ./Clients.Persistence.SqlServer
-  dotnet test
+  dotnet ef database update --project ./Clients.Api
 ```
 
 #### 2. _install node modules_
 ```
   cd Clients.Vuejs/
   npm install
-  npm run test
 ```
 
 If everything passes without crashes you are good to go, I mean run :-)
@@ -58,8 +56,9 @@ Here some more information about the standards and rules applied on this reposit
 - MVC
 
 #### Code principles
+- Clean
 - SOLID
-- DRY
+- Defensive Coding
 
 #### Design patterns
 - Command
