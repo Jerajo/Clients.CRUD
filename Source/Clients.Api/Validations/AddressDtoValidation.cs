@@ -41,6 +41,11 @@ namespace Clients.Api.Validations
                 .NotNull()
                 .InclusiveBetween(10000u, 99999u)
                 .WithErrorCode("1010");
+
+            RuleFor(address => address.ClientId)
+                .NotNull()
+                .NotEmpty()
+                .WithErrorCode("1011");
         }
     }
 }

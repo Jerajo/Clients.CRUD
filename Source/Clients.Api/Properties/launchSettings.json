@@ -25,7 +25,7 @@
         "ASPNETCORE_ENVIRONMENT": "Development"
       },
       "dotnetRunMessages": "true",
-      "applicationUrl": "http://localhost:5000"
+      "applicationUrl": "http://10.0.0.2:8080"
     },
     "Clients.Api.Production": {
       "commandName": "Project",
@@ -34,7 +34,7 @@
         "ASPNETCORE_ENVIRONMENT": "Production"
       },
       "dotnetRunMessages": "true",
-      "applicationUrl": "http://127.0.0.1:5000"
+      "applicationUrl": "http://0.0.0.0:8080"
     }
   }
 }
