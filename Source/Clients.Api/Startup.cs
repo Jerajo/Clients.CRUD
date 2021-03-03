@@ -1,15 +1,10 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using Clients.Api.Validations;
+using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
 
 namespace Clients.Api
@@ -27,7 +22,15 @@ namespace Clients.Api
         public void ConfigureServices(IServiceCollection services)
         {
 
-            services.AddControllers();
+            services.AddMvc(
+                options =>
+                {
+                    options.Filters.Add<ValidationResultAttribute>();
+                })
+                .AddFluentValidation(fv => fv.RegisterValidatorsFromAssemblyContaining<ClientDtoValidation>());
+
+            services.AddTransient<IValidatorInterceptor, DtoValidatorInterceptor>();
+
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "Clients.Api", Version = "v1" });
