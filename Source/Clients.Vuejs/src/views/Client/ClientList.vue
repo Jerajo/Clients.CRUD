@@ -2,8 +2,8 @@
   <div class="container">
     <h1 class="my-4">Client List</h1>
     <button
-      @click="goToCreateClient"
       id="createButton"
+      @click="goToCreateClient"
       class="btn btn-success mx-auto mb-4"
     >
       Create new client
@@ -15,22 +15,37 @@
       <table class="table table-striped">
         <thead>
           <tr class="thead-light">
-            <th scope="col">#</th>
             <th scope="col">Full Name</th>
             <th scope="col">User Name</th>
             <th scope="col">EMail</th>
             <th scope="col">Birth Day</th>
             <th scope="col">Marriage Status</th>
+            <th scope="col">Action</th>
           </tr>
         </thead>
         <tbody>
           <tr v-for="client in clients" :key="client.id">
-            <th scope="row">{{ client.id }}</th>
             <td>{{ client.fullName }}</td>
             <td>{{ client.userName }}</td>
             <td>{{ client.email }}</td>
-            <td>{{ client.birthday }}</td>
+            <td>{{ client.birthDay }}</td>
             <td>{{ client.marriageStatus }}</td>
+            <td>
+              <div class="flex-column">
+                <button
+                  @click="goToCreateClient(client.id)"
+                  class="btn btn-outline-success"
+                >
+                  <i class="bi bi-pencil-fill"></i>
+                </button>
+                <button
+                  @click="goToCreateClient"
+                  class="btn btn-outline-danger ms-2"
+                >
+                  <i class="bi bi-trash-fill"></i>
+                </button>
+              </div>
+            </td>
           </tr>
         </tbody>
       </table>
@@ -83,11 +98,22 @@ export default class ClientList extends Vue {
     return client;
   }
 
-  goToCreateClient() {
+  goToCreateClient(clientId: string | undefined) {
     this.$router.push({
       path: "/client-create",
-      query: { operation: "Create" }
+      query: { operation: "Create", id: clientId }
     });
+  }
+
+  deleteClient(clientId: string) {
+    this.webClient
+      .fetch(`api/Clients/${clientId}`, RequestType.DELETE)
+      .then(async value => {
+        this.clients = (await value.json()) as Client[];
+      })
+      .catch(reason => {
+        console.error(reason);
+      });
   }
 
   clearList(): void {
@@ -95,3 +121,5 @@ export default class ClientList extends Vue {
   }
 }
 </script>
+
+<style lang="scss"></style>
