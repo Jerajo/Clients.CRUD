@@ -30,22 +30,6 @@ namespace Clients.Api
                                 sql => sql.MigrationsAssembly(migrationsAssembly))
                                 .UseLazyLoadingProxies());
 
-            services.AddCors(options =>
-            {
-                options.AddDefaultPolicy(
-                    builder =>
-                    {
-                        builder.WithOrigins(new string[]
-                            {
-                                Configuration["API_URL"],
-                                Configuration["WEBCLIENT_URL"]
-                            });
-                        builder.AllowAnyHeader();
-                        builder.AllowAnyMethod();
-                        builder.AllowCredentials();
-                    });
-            });
-
             services.AddControllers(
                 options =>
                 {
@@ -78,11 +62,10 @@ namespace Clients.Api
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Clients.Api v1"));
             }
 
-            app.UseHttpsRedirection();
-
             app.UseRouting();
 
-            app.UseCors();
+            app.UseCors(builder =>
+            builder.AllowAnyHeader().AllowAnyOrigin().AllowAnyMethod());
 
 
             app.UseAuthorization();
