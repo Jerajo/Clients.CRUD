@@ -7,7 +7,6 @@ import * as rules from "../node_modules/vee-validate/dist/rules";
 import { ValidationObserver, extend, ValidationProvider } from "vee-validate";
 
 for (const [rule, validation] of Object.entries(rules)) {
-  console.log("rules", rule);
   extend(rule, {
     ...validation
   });
