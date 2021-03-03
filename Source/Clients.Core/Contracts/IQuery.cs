@@ -5,9 +5,7 @@
     /// </summary>
     /// <typeparam name="TQuery">Query options.</typeparam>
     /// <typeparam name="TResult">Query result.</typeparam>
-    public interface IQuery<TQuery, TResult> : IQueryBase
-        where TQuery : class
-        where TResult : class
+    public interface IQuery<TQuery, TResult> : IQueryBase, System.Windows.Input.ICommand
     {
         /// <summary>
         /// Execute the query.
