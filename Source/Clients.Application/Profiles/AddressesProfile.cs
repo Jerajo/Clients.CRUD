@@ -4,7 +4,7 @@ using Clients.Core.Entities;
 
 namespace Clients.Application.Profiles
 {
-    class AddressesProfile : Profile
+    public class AddressesProfile : Profile
     {
         public AddressesProfile()
         {

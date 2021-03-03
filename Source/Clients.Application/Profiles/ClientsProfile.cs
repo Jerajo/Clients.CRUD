@@ -7,7 +7,7 @@ namespace Clients.Application.Profiles
     /// <summary>
     /// ClientDto mapping configuration.
     /// </summary>
-    class ClientsProfile : Profile
+    public class ClientsProfile : Profile
     {
         public ClientsProfile()
         {
