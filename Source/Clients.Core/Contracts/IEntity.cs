@@ -6,7 +6,7 @@ namespace Clients.Core.Contracts
     /// Represents a entity with the minimum information for the database.
     /// </summary>
     /// <typeparam name="T">The entities id type.</typeparam>
-    public interface Entity<T>
+    public interface IEntity<T>
     {
         /// <summary>
         /// The entity unique identifier.
