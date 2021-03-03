@@ -1,8 +1,13 @@
 export enum RequestType {
-  POST = "POST",
   GET = "GET",
-  UPDATE = "UPDATE",
+  POST = "POST",
+  PUT = "PUT",
   DELETE = "DELETE"
+}
+
+export enum Endpoints {
+  Clients = "api/Clients",
+  Addresses = "api/Addresses"
 }
 
 export class WebClient {
@@ -11,19 +16,45 @@ export class WebClient {
 
   constructor() {
     this.headers = new Headers({
-      Accept: "application/json",
-      "Access-Control-Allow-Origin": this.baseURL,
-      "Access-Control-Allow-Methods": "POST,GET,UPDATE,DELETE"
+      Accept: "*/*",
+      "Content-Type": "application/json",
+      mode: "no-cors"
     });
   }
 
-  public async fetch(
-    url: string,
-    verb: RequestType,
-    data: ArrayBuffer | undefined = undefined
-  ): Promise<Response> {
-    const request = new Request(this.baseURL + url, {
-      method: verb,
+  public async GET(uri: string): Promise<Response> {
+    const request = new Request(this.baseURL + uri, {
+      method: RequestType.GET,
+      headers: this.headers
+    });
+
+    return fetch(request);
+  }
+
+  public async PUT(uri: string, data: string): Promise<Response> {
+    const request = new Request(this.baseURL + uri, {
+      method: RequestType.PUT,
+      headers: this.headers,
+      body: data
+    });
+
+    return fetch(request);
+  }
+
+  public async POST(uri: string, data: string): Promise<Response> {
+    debugger;
+    const request = new Request(this.baseURL + uri, {
+      method: RequestType.POST,
+      headers: this.headers,
+      body: data
+    });
+
+    return fetch(request);
+  }
+
+  public async DELETE(uri: string, data = ""): Promise<Response> {
+    const request = new Request(this.baseURL + uri, {
+      method: RequestType.DELETE,
       headers: this.headers,
       body: data
     });

@@ -3,6 +3,6 @@ export type Client = {
   fullName: string;
   userName: string;
   email: string;
-  birthday: Date;
+  birthDay: string;
   marriageStatus: string;
 };
