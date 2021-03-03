@@ -9,6 +9,6 @@
         /// <summary>
         /// The entity unique identifier.
         /// </summary>
-        T Id { get; set; }
+        public T Id { get; set; }
     }
 }
