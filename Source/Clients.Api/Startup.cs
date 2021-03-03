@@ -1,7 +1,10 @@
 using Clients.Api.Validations;
+using Clients.Application.Profiles;
+using Clients.SqlServer;
 using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -21,15 +24,43 @@ namespace Clients.Api
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            var migrationsAssembly = typeof(Startup).Assembly.GetName().FullName;
+            services.AddDbContext<ApplicationDBContext>(options =>
+                            options.UseSqlServer(Configuration.GetConnectionString(name: "DefaultConnection"),
+                                sql => sql.MigrationsAssembly(migrationsAssembly))
+                                .UseLazyLoadingProxies());
 
-            services.AddMvc(
+            services.AddCors(options =>
+            {
+                options.AddDefaultPolicy(
+                    builder =>
+                    {
+                        builder.WithOrigins(new string[]
+                            {
+                                Configuration["API_URL"],
+                                Configuration["WEBCLIENT_URL"]
+                            });
+                        builder.AllowAnyHeader();
+                        builder.AllowAnyMethod();
+                        builder.AllowCredentials();
+                    });
+            });
+
+            services.AddControllers(
                 options =>
                 {
                     options.Filters.Add<ValidationResultAttribute>();
                 })
                 .AddFluentValidation(fv => fv.RegisterValidatorsFromAssemblyContaining<ClientDtoValidation>());
 
+            services.AddAutoMapper(typeof(ClientsProfile).Assembly);
+
             services.AddTransient<IValidatorInterceptor, DtoValidatorInterceptor>();
+
+            services.ConfigIoCServices();
+            services.ConfigIoCForFactories();
+            services.ConfigIoCForCommands();
+            services.ConfigIoCForQueries();
 
             services.AddSwaggerGen(c =>
             {
@@ -50,6 +81,9 @@ namespace Clients.Api
             app.UseHttpsRedirection();
 
             app.UseRouting();
+
+            app.UseCors();
+
 
             app.UseAuthorization();
 

@@ -24,7 +24,7 @@ namespace Clients.Api.Controllers
             return Ok(addresses);
         }
 
-        [HttpGet]
+        [HttpGet("{addressId}")]
         public IActionResult GetAddressById([FromRoute, FromQuery] Guid addressId)
         {
             if (addressId == Guid.Empty)
@@ -46,13 +46,19 @@ namespace Clients.Api.Controllers
             Guard.Against.Null(addressDto, nameof(addressDto));
 
             var createAddress = _commandFactory.MakeCommand<CreateAddressCommand>();
-
-            createAddress.Execute(addressDto);
+            try
+            {
+                createAddress.Execute(addressDto);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
 
             return Ok();
         }
 
-        [HttpPut]
+        [HttpPut("{addressId}")]
         public IActionResult UpdateAddressById([FromRoute, FromQuery] Guid addressId, [FromBody] AddressDto addressDto)
         {
             if (addressId == Guid.Empty || addressId != addressDto.Id)
@@ -60,19 +66,33 @@ namespace Clients.Api.Controllers
             Guard.Against.Null(addressDto, nameof(addressDto));
 
             var updateAddress = _commandFactory.MakeCommand<UpdateAddressCommand>();
-            updateAddress.Execute(addressDto);
+            try
+            {
+                updateAddress.Execute(addressDto);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
 
             return Ok();
         }
 
-        [HttpDelete]
+        [HttpDelete("{addressId}")]
         public IActionResult DeleteAddressById([FromRoute, FromQuery] Guid addressId)
         {
             if (addressId == Guid.Empty)
                 return BadRequest();
 
             var deleteAddress = _commandFactory.MakeCommand<DeleteAddressCommand>();
-            deleteAddress.Execute(addressId);
+            try
+            {
+                deleteAddress.Execute(addressId);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
 
             return Ok();
         }

@@ -5,9 +5,9 @@ using Microsoft.Extensions.DependencyInjection;
 namespace Clients.Api.Factories
 {
     /// <summary>
-    /// Create an instance of an query.
+    /// Create an instance of an command.
     /// </summary>
-    public class QueryFactory : IQueryFactory
+    public class RepositoryFactory : IRepositoryFactory
     {
         protected readonly IServiceProvider _serviceProvider;
 
@@ -15,15 +15,15 @@ namespace Clients.Api.Factories
         /// Default constructor.
         /// </summary>
         /// <param name="serviceProvider">DI container.</param>
-        public QueryFactory(IServiceProvider serviceProvider)
+        public RepositoryFactory(IServiceProvider serviceProvider)
         {
             _serviceProvider = serviceProvider;
         }
 
         /// <inheritdoc/>
-        public TQuery MakeQuery<TQuery>() where TQuery : IQueryBase
+        public IRepository<TEntity> MakeRepository<TEntity>() where TEntity : class, IEntity<Guid>
         {
-            return _serviceProvider.GetRequiredService<TQuery>();
+            return _serviceProvider.GetRequiredService<IRepository<TEntity>>();
         }
     }
 }

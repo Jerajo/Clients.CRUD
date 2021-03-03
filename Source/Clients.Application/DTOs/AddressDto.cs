@@ -36,5 +36,10 @@ namespace Clients.Application.DTOs
         /// The client's address description 2nd line.
         /// </summary>
         public string AddressLineTwo { get; set; }
+
+        /// <summary>
+        /// The FK to reference the client's address.
+        /// </summary>
+        public Guid ClientId { get; set; }
     }
 }

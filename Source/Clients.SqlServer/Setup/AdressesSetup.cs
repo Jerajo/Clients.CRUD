@@ -49,7 +49,8 @@ namespace Clients.SqlServer.Setup
                 .IsRequired();
 
             modelBuilder.Entity<Address>()
-                .HasOne(a => a.Client);
+                .HasOne(a => a.Client)
+                .WithMany(c => c.Addresses);
         }
     }
 }
