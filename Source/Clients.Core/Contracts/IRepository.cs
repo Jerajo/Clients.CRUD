@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq.Expressions;
+using System.Linq;
 using System.Threading.Tasks;
 
 
@@ -8,14 +8,47 @@ namespace Clients.Core.Contracts
 {
     public interface IRepository<TEntity> where TEntity : class, IEntity<Guid>
     {
-        IUnitOfWork UnitOfWork { get; set; }
+        IUnitOfWork GetTransaction();
+
+        #region GET
+
+        TEntity Get(Func<TEntity, bool> query);
+        Task<TEntity> GetAllAsync(Func<TEntity, bool> query);
+        IQueryable<TEntity> GetAll();
+        Task<IQueryable<TEntity>> GetAllAsync();
+        List<TEntity> Query(Func<TEntity, bool> query);
+        Task<List<TEntity>> QueryAsync(Func<TEntity, bool> query);
+
+        bool Any();
+        Task<bool> AnyAsync();
+
+        #endregion
+
+        #region POST
+
         void Add(TEntity entity);
-        bool Any(Func<TEntity, bool> query);
-        TEntity Find(Expression<Func<TEntity, bool>> query);
-        Task<TEntity> FindAsync(Expression<Func<TEntity, bool>> query);
-        List<TEntity> Query(Expression<Func<TEntity, bool>> query = null);
-        Task<List<TEntity>> QueryAsync(Expression<Func<TEntity, bool>> query = null);
-        void Remove(TEntity entity);
+        Task AddAsync(TEntity entity);
+        void AddGroup(IEnumerable<TEntity> entities);
+        Task AddGroupAsync(IEnumerable<TEntity> entities);
+
+        #endregion
+
+        #region PUT/PATCH
+
         void Update(TEntity entity);
+        Task UpdateAsync(TEntity entity);
+        void UpdateGroup(TEntity entity, Func<TEntity, bool> query);
+        Task UpdateGroupAsync(TEntity entity, Func<TEntity, bool> query);
+
+        #endregion
+
+        #region DELETE
+
+        void Delete(TEntity entity);
+        Task DeleteAsync(TEntity entity);
+        void DeleteGroup(Func<TEntity, bool> query);
+        Task DeleteGroupAsync(Func<TEntity, bool> query);
+
+        #endregion
     }
 }

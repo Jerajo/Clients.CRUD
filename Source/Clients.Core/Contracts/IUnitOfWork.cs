@@ -5,9 +5,8 @@ namespace Clients.Core.Contracts
 {
     public interface IUnitOfWork
     {
-        IRepository<TEntity> GetPersistence<TEntity>(Type typeEntity)
-             where TEntity : class, IEntity<Guid>;
-        void CommitChanges(Action<string> errorCallback = null);
-        Task CommitChangesAsync(Action<string> errorCallback = null);
+        IRepository<T> GetRepository<T>() where T : class, IEntity<Guid>;
+        void Commit();
+        Task CommitAsync();
     }
 }
