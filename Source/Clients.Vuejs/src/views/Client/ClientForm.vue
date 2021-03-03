@@ -1,3 +1,5 @@
+/* eslint-disable no-debugger */
+
 <template>
   <div class="container text-start">
     <h1 class="my-4">{{ title }}</h1>
@@ -5,7 +7,7 @@
       <form action="none" @submit.prevent="handleSubmit(onSubmitForm)">
         <ValidationProvider
           name="Full Name"
-          rules="required|alpha|max:150"
+          rules="required|max:150"
           v-slot="{ errors }"
         >
           <div class="form-group mb-3">
@@ -77,7 +79,7 @@
             <div class="col-md-6">
               <input
                 type="date"
-                v-model="client.birthday"
+                v-model="client.birthDay"
                 class="form-control"
                 required
               />
@@ -115,7 +117,7 @@
 
         <input
           type="submit"
-          value="Create cliente"
+          v-model="buttonText"
           class="btn btn-outline-primary my-3"
         />
       </form>
@@ -126,24 +128,30 @@
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
 import { Client } from "../../models/Client";
-import { WebClient, RequestType } from "../../helpers/WebClient";
+import { WebClient, Endpoints } from "../../helpers/WebClient";
 
 @Component
 export default class ClientForm extends Vue {
   client = this.getClient();
   webClient = new WebClient();
   title = "";
-  id = "";
+  buttonText = "Create Client";
+  id: string | undefined;
 
   mounted() {
+    if (typeof this.$route.query.id == "string") {
+      this.id = this.$route.query.id as string;
+      this.buttonText = "Edit Client";
+    }
+
     this.title = this.$route.query["operation"] + " Client";
-    this.id = this.$route.query.id as string;
+
     if (this.id && typeof this.id == "string") this.fetchClient(this.id);
   }
 
   fetchClient(id: string) {
     this.webClient
-      .fetch(`api/clients/${id}`, RequestType.GET)
+      .GET(`${Endpoints.Clients}/${id}`)
       .then(async value => {
         this.client = (await value.json()) as Client;
       })
@@ -158,15 +166,49 @@ export default class ClientForm extends Vue {
       fullName: "",
       userName: "",
       email: "",
-      birthday: new Date(),
+      birthDay: "1991-09-30T13:49:26.908",
       marriageStatus: ""
     };
 
     return client;
   }
 
+  goBack() {
+    this.$router.back();
+  }
+
   onSubmitForm() {
-    console.log(this.client);
+    debugger;
+    this.client.birthDay = "1991-09-30T13:49:26.908";
+    const body = JSON.stringify(this.client);
+    console.log(body);
+
+    if (this.id) {
+      this.webClient
+        .PUT(`${Endpoints.Clients}/${this.id}`, body)
+        .then(() => {
+          this.goBack();
+        })
+        .catch(reason => {
+          console.error(reason);
+        });
+    } else {
+      this.webClient
+        .POST(Endpoints.Clients, body)
+        .then(() => {
+          this.goBack();
+        })
+        .catch(reason => {
+          console.error(reason);
+        });
+    }
+  }
+
+  convert(str: string) {
+    const date = new Date(str),
+      mnth = ("0" + (date.getMonth() + 1)).slice(-2),
+      day = ("0" + date.getDate()).slice(-2);
+    return [date.getFullYear(), mnth, day].join("-");
   }
 }
 </script>

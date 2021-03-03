@@ -39,7 +39,7 @@
                   <i class="bi bi-pencil-fill"></i>
                 </button>
                 <button
-                  @click="goToCreateClient"
+                  @click="deleteClient(client.id)"
                   class="btn btn-outline-danger ms-2"
                 >
                   <i class="bi bi-trash-fill"></i>
@@ -56,7 +56,7 @@
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
 import { Client } from "../../models/Client";
-import { WebClient, RequestType } from "../../helpers/WebClient";
+import { WebClient, Endpoints } from "../../helpers/WebClient";
 import { makeId } from "../../helpers";
 
 @Component
@@ -76,7 +76,7 @@ export default class ClientList extends Vue {
 
   getClients(): void {
     this.webClient
-      .fetch(`api/Clients`, RequestType.GET)
+      .GET(Endpoints.Clients)
       .then(async value => {
         this.clients = (await value.json()) as Client[];
       })
@@ -91,7 +91,7 @@ export default class ClientList extends Vue {
       fullName: "Jesse Jose",
       userName: "jerajo",
       email: "jesse@volatileprogramming.org",
-      birthday: new Date(),
+      birthDay: "1991-09-30T13:49:26.908",
       marriageStatus: "S"
     };
 
@@ -107,9 +107,10 @@ export default class ClientList extends Vue {
 
   deleteClient(clientId: string) {
     this.webClient
-      .fetch(`api/Clients/${clientId}`, RequestType.DELETE)
+      .DELETE(`${Endpoints.Clients}/${clientId}`)
       .then(async value => {
         this.clients = (await value.json()) as Client[];
+        this.clients = this.clients.filter(x => x.id !== clientId);
       })
       .catch(reason => {
         console.error(reason);
