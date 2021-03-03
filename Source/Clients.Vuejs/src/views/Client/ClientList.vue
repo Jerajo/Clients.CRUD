@@ -41,11 +41,13 @@
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
 import { Client } from "../../models/Client";
+import { WebClient, RequestType } from "../../helpers/WebClient";
 import { makeId } from "../../helpers";
 
 @Component
 export default class ClientList extends Vue {
   clients: Client[] = [];
+  webClient = new WebClient();
 
   get hasClients() {
     const result = this.clients.length > 0;
@@ -58,11 +60,14 @@ export default class ClientList extends Vue {
   }
 
   getClients(): void {
-    this.clients.push(this.getClient());
-    this.clients.push(this.getClient());
-    this.clients.push(this.getClient());
-    this.clients.push(this.getClient());
-    this.clients.push(this.getClient());
+    this.webClient
+      .fetch(`api/Clients`, RequestType.GET)
+      .then(async value => {
+        this.clients = (await value.json()) as Client[];
+      })
+      .catch(reason => {
+        console.error(reason);
+      });
   }
 
   getClient(): Client {
