@@ -6,7 +6,7 @@ namespace Clients.Core.Entities
     /// Represents a entity with the minimum information for the database.
     /// </summary>
     /// <typeparam name="T">The entities id type.</typeparam>
-    public abstract class BaseEntity<T> : Contracts.Entity<T>
+    public abstract class BaseEntity<T> : Contracts.IEntity<T>
     {
         /// <inheritdoc/>
         public T Id { get; set; }
