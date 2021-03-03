@@ -24,11 +24,13 @@ namespace Clients.Application.Commands
         {
             Guard.Against.Null(model, nameof(model));
 
-            var newClient = _mapper.Map<Client>(model);
+            var client = _repository.Get(x => x.Id == model.Id);
+
+            Guard.Against.Null(client, nameof(client));
+
+            _mapper.Map(model, client);
 
             var transaction = _repository.GetTransaction();
-
-            _repository.Update(newClient);
 
             transaction.Commit();
         }

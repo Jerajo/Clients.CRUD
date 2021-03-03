@@ -58,7 +58,7 @@ namespace Clients.Api.Controllers
             return Ok();
         }
 
-        [HttpPut]
+        [HttpPut("{addressId}")]
         public IActionResult UpdateAddressById([FromRoute, FromQuery] Guid addressId, [FromBody] AddressDto addressDto)
         {
             if (addressId == Guid.Empty || addressId != addressDto.Id)
@@ -78,7 +78,7 @@ namespace Clients.Api.Controllers
             return Ok();
         }
 
-        [HttpDelete]
+        [HttpDelete("{addressId}")]
         public IActionResult DeleteAddressById([FromRoute, FromQuery] Guid addressId)
         {
             if (addressId == Guid.Empty)

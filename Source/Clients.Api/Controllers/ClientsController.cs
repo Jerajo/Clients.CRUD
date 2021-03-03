@@ -59,7 +59,7 @@ namespace Clients.Api.Controllers
             return Ok();
         }
 
-        [HttpPut]
+        [HttpPut("{clientId}")]
         public IActionResult UpdateClientById([FromRoute, FromQuery] Guid clientId, [FromBody] ClientDto clientDto)
         {
             if (clientId == Guid.Empty || clientId != clientDto.Id)
@@ -79,7 +79,7 @@ namespace Clients.Api.Controllers
             return Ok();
         }
 
-        [HttpDelete]
+        [HttpDelete("{clientId}")]
         public IActionResult DeleteClientById([FromRoute, FromQuery] Guid clientId)
         {
             if (clientId == Guid.Empty)
