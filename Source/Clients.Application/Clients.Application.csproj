@@ -2,6 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
+    <Configurations>Debug;Release;MOCK</Configurations>
   </PropertyGroup>
 
   <PropertyGroup>
@@ -21,6 +22,14 @@
   <PropertyGroup Condition=" '$(Configuration)' != '' AND '$(Configuration)' == 'MOCK' ">
     <EnvironmentName>MOCK</EnvironmentName>
   </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='MOCK|AnyCPU'">
+    <DefineConstants>TRACE</DefineConstants>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="AutoMapper" Version="8.1.1" />
+  </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Clients.Core\Clients.Core.csproj" />
