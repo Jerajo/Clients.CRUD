@@ -9,5 +9,7 @@ declare global {
     interface IntrinsicElements {
       [elem: string]: any;
     }
+    // `npm install @types/vee-validate`
+    // declare module "vee-validate/dist/vee-validate.full.esm";
   }
 }

@@ -9,16 +9,15 @@
           v-slot="{ errors }"
         >
           <div class="form-group mb-3">
-            <label for="fullName" class="control-label">Full Name</label>
+            <label class="control-label">Full Name</label>
             <div class="col-md-6">
               <input
-                id="fullName"
-                v-model="fullName"
+                v-model="client.fullName"
                 class="form-control"
                 placeholder="Full Name"
                 required
               />
-              <span id="fullNameMessage" class="text-danger">
+              <span class="text-danger">
                 {{ errors[0] }}
               </span>
             </div>
@@ -31,16 +30,15 @@
           v-slot="{ errors }"
         >
           <div class="form-group mb-3">
-            <label for="userName" class="control-label">User Name</label>
+            <label class="control-label">User Name</label>
             <div class="col-md-6">
               <input
-                id="userName"
-                v-model="userName"
+                v-model="client.userName"
                 class="form-control"
                 placeholder="User Name"
                 required
               />
-              <span id="userNameMessage" class="text-danger">
+              <span class="text-danger">
                 {{ errors[1] }}
               </span>
             </div>
@@ -53,17 +51,16 @@
           v-slot="{ errors }"
         >
           <div class="form-group mb-3">
-            <label for="email" class="control-label">Email</label>
+            <label class="control-label">Email</label>
             <div class="col-md-6">
               <input
-                id="email"
                 type="email"
-                v-model="email"
+                v-model="client.email"
                 class="form-control"
                 placeholder="E-Mail"
                 required
               />
-              <span id="emailMessage" class="text-danger">
+              <span class="text-danger">
                 {{ errors[2] }}
               </span>
             </div>
@@ -76,16 +73,15 @@
           v-slot="{ errors }"
         >
           <div class="form-group mb-3">
-            <label for="birthday" class="control-label">Birth Day</label>
+            <label class="control-label">Birth Day</label>
             <div class="col-md-6">
               <input
-                id="birthday"
                 type="date"
-                v-model="birthday"
+                v-model="client.birthday"
                 class="form-control"
                 required
               />
-              <span id="birthdayMessage" class="text-danger">
+              <span class="text-danger">
                 {{ errors[3] }}
               </span>
             </div>
@@ -98,20 +94,19 @@
           v-slot="{ errors }"
         >
           <div class="form-group mb-3">
-            <label for="marriageStatus" class="control-label">
+            <label class="control-label">
               Marriage Status
             </label>
             <div class="col-md-6">
               <select
-                v-model="marriageStatus"
+                v-model="client.marriageStatus"
                 name="marriageStatus"
-                id="marriageStatus"
                 class="form-control"
               >
                 <option value="S">Single</option>
                 <option value="M">Married</option>
               </select>
-              <span id="marriageStatusMessage" class="text-danger">
+              <span class="text-danger">
                 {{ errors[4] }}
               </span>
             </div>
@@ -135,7 +130,7 @@ import { WebClient, RequestType } from "../../helpers/WebClient";
 
 @Component
 export default class ClientForm extends Vue {
-  client: Client | undefined;
+  client = this.getClient();
   webClient = new WebClient();
   title = "";
   id = "";
@@ -144,7 +139,6 @@ export default class ClientForm extends Vue {
     this.title = this.$route.query["operation"] + " Client";
     this.id = this.$route.query.id as string;
     if (this.id && typeof this.id == "string") this.fetchClient(this.id);
-    else this.client = this.getClient();
   }
 
   fetchClient(id: string) {

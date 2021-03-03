@@ -6,12 +6,13 @@ export enum RequestType {
 }
 
 export class WebClient {
+  baseURL = "http://10.0.0.2:8080/";
   headers: Headers;
 
   constructor() {
     this.headers = new Headers({
       Accept: "application/json",
-      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Origin": this.baseURL,
       "Access-Control-Allow-Methods": "POST,GET,UPDATE,DELETE"
     });
   }
@@ -21,7 +22,7 @@ export class WebClient {
     verb: RequestType,
     data: ArrayBuffer | undefined = undefined
   ): Promise<Response> {
-    const request = new Request(url, {
+    const request = new Request(this.baseURL + url, {
       method: verb,
       headers: this.headers,
       body: data
