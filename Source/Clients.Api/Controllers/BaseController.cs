@@ -1,39 +1,35 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using AutoMapper;
+using Clients.Core.Contracts;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Clients.Api.Controllers
 {
-    [ApiController]
-    [Route("[controller]")]
-    public class WeatherForecastController : ControllerBase
+    /// <summary>
+    /// Base controller class to get the dependency injections passed over other controllers. that inherits from this class.
+    /// </summary>
+    public class BaseController : ControllerBase
     {
-        private static readonly string[] Summaries = new[]
-        {
-            "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-        };
+        protected readonly IServiceProvider _serviceProvider;
+        protected readonly ICommandFactory _commandFactory;
+        protected readonly IQueryFactory _queryFactory;
+        protected readonly IRepositoryFactory _repositoryFactory;
+        protected readonly IUnitOfWork _unitOfWork;
+        protected readonly IMapper _mapper;
 
-        private readonly ILogger<WeatherForecastController> _logger;
-
-        public WeatherForecastController(ILogger<WeatherForecastController> logger)
+        /// <summary>
+        /// This is the default constructor. Is where the dependencies get injected.
+        /// </summary>
+        /// <param name="serviceProvider">The API current service provider or IoC Container.</param>
+        public BaseController(IServiceProvider serviceProvider)
         {
-            _logger = logger;
-        }
-
-        [HttpGet]
-        public IEnumerable<WeatherForecast> Get()
-        {
-            var rng = new Random();
-            return Enumerable.Range(1, 5).Select(index => new WeatherForecast
-            {
-                Date = DateTime.Now.AddDays(index),
-                TemperatureC = rng.Next(-20, 55),
-                Summary = Summaries[rng.Next(Summaries.Length)]
-            })
-            .ToArray();
+            _serviceProvider = serviceProvider;
+            _commandFactory = serviceProvider.GetRequiredService<ICommandFactory>();
+            _queryFactory = serviceProvider.GetRequiredService<IQueryFactory>();
+            _repositoryFactory = serviceProvider.GetRequiredService<IRepositoryFactory>();
+            _unitOfWork = serviceProvider.GetRequiredService<IUnitOfWork>();
+            _mapper = serviceProvider.GetRequiredService<IMapper>();
         }
     }
 }
