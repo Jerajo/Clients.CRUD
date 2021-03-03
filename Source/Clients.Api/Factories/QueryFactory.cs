@@ -21,7 +21,7 @@ namespace Clients.Api.Factories
         }
 
         /// <inheritdoc/>
-        TQuery MakeQuery<TQuery>() where TQuery : IQueryBase
+        public TQuery MakeQuery<TQuery>() where TQuery : IQueryBase
         {
             return _serviceProvider.GetRequiredService<TQuery>();
         }
