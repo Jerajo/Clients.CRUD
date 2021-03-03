@@ -20,7 +20,7 @@ namespace Clients.SqlServer.Setup
 
             modelBuilder.Entity<Client>()
                 .Property(c => c.FullName)
-                .HasMaxLength(250)
+                .HasMaxLength(150)
                 .IsRequired();
 
             modelBuilder.Entity<Client>()
@@ -29,12 +29,12 @@ namespace Clients.SqlServer.Setup
 
             modelBuilder.Entity<Client>()
                 .Property(c => c.UserName)
-                .HasMaxLength(10)
+                .HasMaxLength(35)
                 .IsRequired();
 
             modelBuilder.Entity<Client>()
                 .Property(c => c.Email)
-                .HasMaxLength(250)
+                .HasMaxLength(150)
                 .IsRequired();
 
             modelBuilder.Entity<Client>()
