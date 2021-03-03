@@ -28,8 +28,8 @@ namespace Clients.Application.DTOs
         public DateTime BirthDay { get; set; }
 
         /// <summary>
-        /// Holds the client's sex. [F: for female | M: for male].
+        /// Holds the client's marriage status. [S: single | M: married].
         /// </summary>
-        public char Sex { get; set; }
+        public char MarriageStatus { get; set; }
     }
 }
