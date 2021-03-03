@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace Clients.Core.Entities
 {
@@ -28,9 +29,14 @@ namespace Clients.Core.Entities
         public DateTime BirthDay { get; set; }
 
         /// <summary>
-        /// Holds the client's sex. [F: for female | M: for male].
+        /// Holds the client's marriage status. [S: single | M: married].
         /// </summary>
-        public char Sex { get; set; }
+        public char MarriageStatus { get; set; }
+
+        /// <summary>
+        /// Lazily loads all client's addresses.
+        /// </summary>
+        public virtual ICollection<Address> Addresses { get; set; }
 
     }
 }

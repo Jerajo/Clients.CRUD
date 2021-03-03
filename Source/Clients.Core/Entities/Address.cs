@@ -36,5 +36,10 @@ namespace Clients.Core.Entities
         /// The client's address description 2nd line.
         /// </summary>
         public string AddressLineTwo { get; set; }
+
+        /// <summary>
+        /// Lazily loads the address's owner.
+        /// </summary>
+        public virtual Client Client { get; set; }
     }
 }
