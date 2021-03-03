@@ -22,5 +22,8 @@ namespace Clients.Core.Entities
 
         /// <inheritdoc/>
         public DateTime UpdatedDate { get; set; }
+
+        /// <inheritdoc/>
+        public string DeleteFlag { get; set; }
     }
 }

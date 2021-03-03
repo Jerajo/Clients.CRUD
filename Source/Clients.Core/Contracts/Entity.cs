@@ -32,5 +32,10 @@ namespace Clients.Core.Contracts
         /// The date and time where the entity was updated.
         /// </summary>
         DateTime UpdatedDate { get; set; }
+
+        /// <summary>
+        /// Indicates whether or not the entity is deleted.
+        /// </summary>
+        string DeleteFlag { get; set; }
     }
 }
