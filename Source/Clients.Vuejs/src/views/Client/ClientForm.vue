@@ -178,7 +178,6 @@ export default class ClientForm extends Vue {
   }
 
   onSubmitForm() {
-    debugger;
     this.client.birthDay = "1991-09-30T13:49:26.908";
     const body = JSON.stringify(this.client);
     console.log(body);

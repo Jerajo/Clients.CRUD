@@ -42,7 +42,6 @@ export class WebClient {
   }
 
   public async POST(uri: string, data: string): Promise<Response> {
-    debugger;
     const request = new Request(this.baseURL + uri, {
       method: RequestType.POST,
       headers: this.headers,
