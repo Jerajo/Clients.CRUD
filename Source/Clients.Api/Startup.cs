@@ -24,11 +24,17 @@ namespace Clients.Api
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+#if MOCK
+            services.AddDbContext<ApplicationDBContext>(options =>
+                            options.UseInMemoryDatabase("applicationDb"));
+#else
             var migrationsAssembly = typeof(Startup).Assembly.GetName().FullName;
             services.AddDbContext<ApplicationDBContext>(options =>
                             options.UseSqlServer(Configuration.GetConnectionString(name: "DefaultConnection"),
                                 sql => sql.MigrationsAssembly(migrationsAssembly))
                                 .UseLazyLoadingProxies());
+#endif
+
 
             services.AddControllers(
                 options =>

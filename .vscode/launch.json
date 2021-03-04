@@ -8,7 +8,9 @@
       "request": "launch",
       "program": "${workspaceFolder}/temp_data/bin/Debug/Clients.Api.dll",
       "preLaunchTask": "build",
-      "args": [],
+      "args": [
+        "--configuration MOCK"
+      ],
       "cwd": "${workspaceFolder}",
       "stopAtEntry": false,
       "serverReadyAction": {
