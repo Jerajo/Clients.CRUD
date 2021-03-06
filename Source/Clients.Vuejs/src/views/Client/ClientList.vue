@@ -3,12 +3,15 @@
     <h1 class="my-4">Client List</h1>
     <button
       id="createButton"
-      @click="goToCreateClient"
+      @click="goToClientForm"
       class="btn btn-success mx-auto mb-4"
     >
       Create new client
     </button>
-    <div v-if="hasClients === false" class="text-md-center">
+    <div v-if="loading">
+      <h2>Loading clients...</h2>
+    </div>
+    <div v-else-if="hasClients === false" class="text-md-center">
       <h2>There are not clients on the list yet.</h2>
     </div>
     <div v-else class="table-responsive">
@@ -33,7 +36,7 @@
             <td>
               <div class="flex-column">
                 <button
-                  @click="goToCreateClient(client.id)"
+                  @click="goToClientForm(client.id)"
                   class="btn btn-outline-success"
                 >
                   <i class="bi bi-pencil-fill"></i>
@@ -56,11 +59,12 @@
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
 import { Client } from "../../models/Client";
+import { handleError } from "../../helpers";
 import { WebClient, Endpoints } from "../../helpers/WebClient";
-import { makeId } from "../../helpers";
 
 @Component
 export default class ClientList extends Vue {
+  loading = true;
   clients: Client[] = [];
   webClient = new WebClient();
 
@@ -77,44 +81,31 @@ export default class ClientList extends Vue {
   getClients(): void {
     this.webClient
       .GET(Endpoints.Clients)
-      .then(async value => {
-        this.clients = (await value.json()) as Client[];
+      .then(value => {
+        this.clients = value.data as Client[];
       })
-      .catch(reason => {
-        console.error(reason);
+      .catch(handleError)
+      .then(() => {
+        this.loading = false;
       });
   }
 
-  getClient(): Client {
-    const client = {
-      id: makeId(5),
-      fullName: "Jesse Jose",
-      userName: "jerajo",
-      email: "jesse@volatileprogramming.org",
-      birthDay: "1991-09-30T13:49:26.908",
-      marriageStatus: "S"
-    };
+  goToClientForm(clientId: string | undefined = undefined) {
+    const operation = typeof clientId === "string" ? "Edit" : "Create";
 
-    return client;
-  }
-
-  goToCreateClient(clientId: string | undefined) {
     this.$router.push({
       path: "/client-create",
-      query: { operation: "Create", id: clientId }
+      query: { operation, clientId }
     });
   }
 
   deleteClient(clientId: string) {
     this.webClient
       .DELETE(`${Endpoints.Clients}/${clientId}`)
-      .then(async value => {
-        this.clients = (await value.json()) as Client[];
-        this.clients = this.clients.filter(x => x.id !== clientId);
+      .then(() => {
+        this.clients = this.clients.filter(x => x.id.toString() !== clientId);
       })
-      .catch(reason => {
-        console.error(reason);
-      });
+      .catch(handleError);
   }
 
   clearList(): void {
