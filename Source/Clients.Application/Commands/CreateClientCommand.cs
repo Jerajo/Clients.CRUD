@@ -6,7 +6,7 @@ using Clients.Core.Entities;
 
 namespace Clients.Application.Commands
 {
-    public class CreateClientCommand : ICommand<ClientDto>
+    public class CreateClientCommand : ICommand<ClientForCreationDto>
     {
         private readonly IRepository<Client> _repository;
         private readonly IMapper _mapper;
@@ -20,7 +20,7 @@ namespace Clients.Application.Commands
             _mapper = mapper;
         }
 
-        public void Execute(ClientDto model)
+        public void Execute(ClientForCreationDto model)
         {
             Guard.Against.Null(model, nameof(model));
 
