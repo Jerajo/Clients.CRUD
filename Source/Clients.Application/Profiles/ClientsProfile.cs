@@ -15,6 +15,9 @@ namespace Clients.Application.Profiles
                 .ForMember(client => client.Id, action => action.Ignore());
 
             CreateMap<Client, ClientDto>();
+
+            CreateMap<ClientForCreationDto, Client>();
+            CreateMap<ClientForEditionDto, Client>();
         }
     }
 }
