@@ -1,12 +1,25 @@
 ﻿using System;
-using Clients.Application.DTOs;
+
 using FluentValidation;
+
+using Clients.Core.Contracts;
+using Clients.Core.Entities;
+using Clients.Application.DTOs;
 
 namespace Clients.Api.Validations
 {
-    public class ClientDtoValidation : AbstractValidator<ClientDto>
+    public class GuidValidator : AbstractValidator<Guid>
     {
-        public ClientDtoValidation()
+        public GuidValidator()
+        {
+            RuleFor(guid => guid)
+                .NotEqual(Guid.Empty);
+        }
+    }
+
+    public class ClientForCreationDtoValidation : AbstractValidator<ClientForCreationDto>
+    {
+        public ClientForCreationDtoValidation(IRepository<Client> repository)
         {
             RuleFor(client => client.FullName)
                 .NotNull()
@@ -37,6 +50,14 @@ namespace Clients.Api.Validations
                 .NotEmpty()
                 .Must(x => x.Equals('S') || x.Equals('M'))
                 .WithErrorCode("1004");
+
+            RuleFor(client => client.UserName)
+                .Must(userName => !repository.Any(c => c.UserName == userName))
+                .WithErrorCode("1012");
+
+            RuleFor(client => client.Email)
+                .Must(email => !repository.Any(c => c.Email == email))
+                .WithErrorCode("1013");
         }
     }
 }
