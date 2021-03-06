@@ -1,9 +1,9 @@
 using System;
-using Ardalis.GuardClauses;
+using Microsoft.AspNetCore.Mvc;
+
 using Clients.Application.Commands;
 using Clients.Application.DTOs;
 using Clients.Application.Queries;
-using Microsoft.AspNetCore.Mvc;
 
 namespace Clients.Api.Controllers
 {
@@ -14,26 +14,24 @@ namespace Clients.Api.Controllers
         public ClientsController(IServiceProvider serviceProvider)
             : base(serviceProvider) { }
 
-
         [HttpGet]
         public IActionResult GetClients()
         {
             var getClients = _queryFactory.MakeQuery<GetClientsQuery>();
 
-            var clients = getClients.Execute(x => true);
+            var clients = getClients.Execute(c => string.IsNullOrEmpty(c.DeleteFlag));
 
             return Ok(clients);
         }
 
-        [HttpGet("{clientId}")]
-        public IActionResult GetClientById([FromRoute, FromQuery] Guid clientId)
+        [HttpGet("{id}")]
+        public IActionResult GetClientById([FromRoute, FromQuery] Guid id)
         {
-            if (clientId == Guid.Empty)
-                return BadRequest();
-
             var getClientById = _queryFactory.MakeQuery<GetClientByIdQuery>();
 
-            var client = getClientById.Execute(x => x.Id == clientId);
+            var client = getClientById.Execute(c =>
+                    c.Id == id &&
+                    string.IsNullOrEmpty(c.DeleteFlag));
 
             if (client is null)
                 return NotFound();
@@ -42,58 +40,33 @@ namespace Clients.Api.Controllers
         }
 
         [HttpPost]
-        public IActionResult CreateClient([FromBody] ClientDto clientDto)
+        public IActionResult CreateClient([FromBody] ClientForCreationDto clientDto)
         {
-            Guard.Against.Null(clientDto, nameof(clientDto));
-
             var createClient = _commandFactory.MakeCommand<CreateClientCommand>();
-            try
-            {
-                createClient.Execute(clientDto);
-            }
-            catch (Exception e)
-            {
-                return BadRequest(e.Message);
-            }
+
+            createClient.Execute(clientDto);
 
             return Ok();
         }
 
-        [HttpPut("{clientId}")]
-        public IActionResult UpdateClientById([FromRoute, FromQuery] Guid clientId, [FromBody] ClientDto clientDto)
+        [HttpPut("{id}")]
+        public IActionResult UpdateClientById(
+            [FromRoute, FromQuery] Guid id,
+            [FromBody] ClientForEditionDto clientDto)
         {
-            if (clientId == Guid.Empty || clientId != clientDto.Id)
-                return BadRequest();
-            Guard.Against.Null(clientDto, nameof(clientDto));
-
             var updateClient = _commandFactory.MakeCommand<UpdateClientCommand>();
-            try
-            {
-                updateClient.Execute(clientDto);
-            }
-            catch (Exception e)
-            {
-                return BadRequest(e.Message);
-            }
+
+            updateClient.Execute((id, clientDto));
 
             return Ok();
         }
 
-        [HttpDelete("{clientId}")]
-        public IActionResult DeleteClientById([FromRoute, FromQuery] Guid clientId)
+        [HttpDelete("{id}")]
+        public IActionResult DeleteClientById([FromRoute, FromQuery] Guid id)
         {
-            if (clientId == Guid.Empty)
-                return BadRequest();
-
             var deleteClient = _commandFactory.MakeCommand<DeleteClientCommand>();
-            try
-            {
-                deleteClient.Execute(clientId);
-            }
-            catch (Exception e)
-            {
-                return BadRequest(e.Message);
-            }
+
+            deleteClient.Execute(id);
 
             return Ok();
         }
