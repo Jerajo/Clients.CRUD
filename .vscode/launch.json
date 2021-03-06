@@ -3,14 +3,12 @@
   "version": "0.2.0",
   "configurations": [
     {
-      "name": "Debug .NET Core Launch (api)",
+      "name": "Launch .NET Core API (Develop)",
       "type": "coreclr",
       "request": "launch",
-      "program": "${workspaceFolder}/temp_data/bin/Debug/Clients.Api.dll",
+      "program": "${workspaceFolder}/temp_data/bin/Debug/Clients.Api/Clients.Api.dll",
       "preLaunchTask": "build",
-      "args": [
-        "--configuration MOCK"
-      ],
+      "args": [],
       "cwd": "${workspaceFolder}",
       "stopAtEntry": false,
       "serverReadyAction": {
@@ -19,6 +17,34 @@
       },
       "env": {
         "ASPNETCORE_ENVIRONMENT": "Development"
+      },
+      "launchBrowser": {
+        "enabled": true
+      }
+    },
+    // Launch on terminal using MOCK configuration to use In-Memory database
+    // dotnet run --configuration MOCK
+    {
+      "name": "Launch .NET Core API (MOCK)",
+      "type": "coreclr",
+      "request": "launch",
+      "program": "${workspaceFolder}/temp_data/bin/MOCK/Clients.Api/Clients.Api.dll",
+      "preLaunchTask": "build-mock",
+      "args": [
+        "--configuration",
+        "MOCK"
+      ],
+      "cwd": "${workspaceFolder}",
+      "stopAtEntry": false,
+      "serverReadyAction": {
+        "action": "openExternally",
+        "pattern": "\\\\bNow listening on:\\\\s+(https?://\\\\S+)"
+      },
+      "env": {
+        "ASPNETCORE_ENVIRONMENT": "MOCK"
+      },
+      "launchBrowser": {
+        "enabled": true
       }
     },
     {
