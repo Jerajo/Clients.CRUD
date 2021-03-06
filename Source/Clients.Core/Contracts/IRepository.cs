@@ -19,8 +19,8 @@ namespace Clients.Core.Contracts
         List<TEntity> Query(Func<TEntity, bool> query);
         Task<List<TEntity>> QueryAsync(Func<TEntity, bool> query);
 
-        bool Any();
-        Task<bool> AnyAsync();
+        bool Any(Func<TEntity, bool> query = null);
+        Task<bool> AnyAsync(Func<TEntity, bool> query = null);
 
         #endregion
 
