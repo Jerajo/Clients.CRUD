@@ -338,3 +338,9 @@ ASALocalRun/
 
 # BeatPulse healthcheck temp database
 healthchecksdb
+
+# Serilog errors files
+serverAPI_e_logs
+
+# MOCK database
+*.db

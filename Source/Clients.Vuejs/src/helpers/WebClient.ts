@@ -1,64 +1,39 @@
-export enum RequestType {
-  GET = "GET",
-  POST = "POST",
-  PUT = "PUT",
-  DELETE = "DELETE"
-}
+import axios, { AxiosInstance, AxiosResponse } from "axios";
 
 export enum Endpoints {
-  Clients = "api/Clients",
-  Addresses = "api/Addresses"
+  Clients = "Clients",
+  Addresses = "Addresses"
 }
 
 export class WebClient {
-  baseURL = "http://10.0.0.2:8080/";
-  headers: Headers;
+  instance: AxiosInstance;
 
   constructor() {
-    this.headers = new Headers({
-      Accept: "*/*",
-      "Content-Type": "application/json",
-      mode: "no-cors"
+    this.instance = axios.create({
+      baseURL: 'http://10.0.0.2:8080/api/',
+      timeout: 30000,
+      headers: {
+        "Access-Control-Allow-Origin": "*",
+        accept: "*/*",
+        "Content-Type": "application/json",
+        mode: "no-cors"
+      }
     });
   }
 
-  public async GET(uri: string): Promise<Response> {
-    const request = new Request(this.baseURL + uri, {
-      method: RequestType.GET,
-      headers: this.headers
-    });
-
-    return fetch(request);
+  public async GET(uri: string): Promise<AxiosResponse<any>> {
+    return this.instance.get(uri);
   }
 
-  public async PUT(uri: string, data: string): Promise<Response> {
-    const request = new Request(this.baseURL + uri, {
-      method: RequestType.PUT,
-      headers: this.headers,
-      body: data
-    });
-
-    return fetch(request);
+  public async PUT(uri: string, data: object): Promise<AxiosResponse<any>> {
+    return this.instance.put(uri, data);
   }
 
-  public async POST(uri: string, data: string): Promise<Response> {
-    debugger;
-    const request = new Request(this.baseURL + uri, {
-      method: RequestType.POST,
-      headers: this.headers,
-      body: data
-    });
-
-    return fetch(request);
+  public async POST(uri: string, data: object): Promise<AxiosResponse<any>> {
+    return this.instance.post(uri, data);
   }
 
-  public async DELETE(uri: string, data = ""): Promise<Response> {
-    const request = new Request(this.baseURL + uri, {
-      method: RequestType.DELETE,
-      headers: this.headers,
-      body: data
-    });
-
-    return fetch(request);
+  public async DELETE(uri: string): Promise<AxiosResponse<any>> {
+    return this.instance.delete(uri);
   }
 }

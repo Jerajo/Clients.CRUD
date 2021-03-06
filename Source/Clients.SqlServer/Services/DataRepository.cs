@@ -59,14 +59,18 @@ namespace Clients.SqlServer.Services
 
         #region OPTIONS
 
-        public bool Any()
+        public bool Any(Func<TEntity, bool> query = null)
         {
-            return _dBContext.Set<TEntity>().Any();
+            var result = (query != null) ?
+                _dBContext.Set<TEntity>().Any(query) :
+                _dBContext.Set<TEntity>().Any();
+
+            return result;
         }
 
-        public Task<bool> AnyAsync()
+        public Task<bool> AnyAsync(Func<TEntity, bool> query = null)
         {
-            return AsyncOperation.FromResult(Any());
+            return AsyncOperation.FromResult(Any(query));
         }
 
         #endregion

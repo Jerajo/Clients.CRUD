@@ -7,11 +7,27 @@
             "type": "process",
             "args": [
                 "build",
-                "${workspaceFolder}/Clients.Api/Clients.Api.csproj",
+                "${workspaceFolder}/Source/Clients.Api/Clients.Api.csproj",
                 "/property:GenerateFullPaths=true",
                 "/consoleloggerparameters:NoSummary"
             ],
-            "problemMatcher": "$msCompile"
+            "problemMatcher": "$msCompile",
+            "detail": "dotnet build [options] <PROJECT | SOLUTION>"
+        },
+        {
+            "label": "build-mock",
+            "command": "dotnet",
+            "type": "process",
+            "args": [
+                "build",
+                "${workspaceFolder}/Source/Clients.Api/Clients.Api.csproj",
+                "--configuration",
+                "MOCK",
+                "/property:GenerateFullPaths=true",
+                "/consoleloggerparameters:NoSummary"
+            ],
+            "problemMatcher": "$msCompile",
+            "detail": "dotnet build [options] <PROJECT | SOLUTION>"
         },
         {
             "label": "publish",
@@ -19,11 +35,12 @@
             "type": "process",
             "args": [
                 "publish",
-                "${workspaceFolder}/Clients.Api/Clients.Api.csproj",
+                "${workspaceFolder}/Source/Clients.Api/Clients.Api.csproj",
                 "/property:GenerateFullPaths=true",
                 "/consoleloggerparameters:NoSummary"
             ],
-            "problemMatcher": "$msCompile"
+            "problemMatcher": "$msCompile",
+            "detail": "dotnet publish --Project [options]"
         },
         {
             "label": "watch",
@@ -32,11 +49,45 @@
             "args": [
                 "watch",
                 "run",
-                "${workspaceFolder}/Clients.Api/Clients.Api.csproj",
+                "${workspaceFolder}/Source/Clients.Api/Clients.Api.csproj",
                 "/property:GenerateFullPaths=true",
                 "/consoleloggerparameters:NoSummary"
             ],
-            "problemMatcher": "$msCompile"
+            "problemMatcher": "$msCompile",
+            "detail": "dotnet watch run  --Project [options]"
+        },
+        {
+            "type": "npm",
+            "script": "build",
+            "path": "Source/Clients.Vuejs/",
+            "group": "build",
+            "problemMatcher": [],
+            "label": "npm: build - Source/Clients.Vuejs",
+            "detail": "vue-cli-service build"
+        },
+        {
+            "type": "npm",
+            "script": "install",
+            "path": "Source/Clients.Vuejs/",
+            "problemMatcher": [],
+            "label": "npm: install - Source/Clients.Vuejs",
+            "detail": "install dependencies from package"
+        },
+        {
+            "type": "npm",
+            "script": "lint",
+            "path": "Source/Clients.Vuejs/",
+            "problemMatcher": [],
+            "label": "npm: lint - Source/Clients.Vuejs",
+            "detail": "vue-cli-service lint"
+        },
+        {
+            "label": "npm: serve - Source/Clients.Vuejs",
+            "type": "npm",
+            "script": "serve",
+            "path": "Source/Clients.Vuejs/",
+            "problemMatcher": [],
+            "detail": "vue-cli-service serve"
         }
     ]
 }

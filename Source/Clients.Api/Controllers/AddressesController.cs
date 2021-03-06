@@ -1,9 +1,9 @@
 ﻿using System;
-using Ardalis.GuardClauses;
+using Microsoft.AspNetCore.Mvc;
+
 using Clients.Application.Commands;
 using Clients.Application.DTOs;
 using Clients.Application.Queries;
-using Microsoft.AspNetCore.Mvc;
 
 namespace Clients.Api.Controllers
 {
@@ -24,15 +24,12 @@ namespace Clients.Api.Controllers
             return Ok(addresses);
         }
 
-        [HttpGet("{addressId}")]
-        public IActionResult GetAddressById([FromRoute, FromQuery] Guid addressId)
+        [HttpGet("{id}")]
+        public IActionResult GetAddressById([FromRoute, FromQuery] Guid id)
         {
-            if (addressId == Guid.Empty)
-                return BadRequest();
-
             var getAddressById = _queryFactory.MakeQuery<GetAddressByIdQuery>();
 
-            var address = getAddressById.Execute(x => x.Id == addressId);
+            var address = getAddressById.Execute(x => x.Id == id);
 
             if (address is null)
                 return NotFound();
@@ -43,56 +40,29 @@ namespace Clients.Api.Controllers
         [HttpPost]
         public IActionResult CreateAddress([FromBody] AddressDto addressDto)
         {
-            Guard.Against.Null(addressDto, nameof(addressDto));
-
             var createAddress = _commandFactory.MakeCommand<CreateAddressCommand>();
-            try
-            {
-                createAddress.Execute(addressDto);
-            }
-            catch (Exception e)
-            {
-                return BadRequest(e.Message);
-            }
+
+            createAddress.Execute(addressDto);
 
             return Ok();
         }
 
-        [HttpPut("{addressId}")]
-        public IActionResult UpdateAddressById([FromRoute, FromQuery] Guid addressId, [FromBody] AddressDto addressDto)
+        [HttpPut("{id}")]
+        public IActionResult UpdateAddressById([FromRoute, FromQuery] Guid id, [FromBody] AddressDto addressDto)
         {
-            if (addressId == Guid.Empty || addressId != addressDto.Id)
-                return BadRequest();
-            Guard.Against.Null(addressDto, nameof(addressDto));
-
             var updateAddress = _commandFactory.MakeCommand<UpdateAddressCommand>();
-            try
-            {
-                updateAddress.Execute(addressDto);
-            }
-            catch (Exception e)
-            {
-                return BadRequest(e.Message);
-            }
+
+            updateAddress.Execute(addressDto);
 
             return Ok();
         }
 
-        [HttpDelete("{addressId}")]
-        public IActionResult DeleteAddressById([FromRoute, FromQuery] Guid addressId)
+        [HttpDelete("{id}")]
+        public IActionResult DeleteAddressById([FromRoute, FromQuery] Guid id)
         {
-            if (addressId == Guid.Empty)
-                return BadRequest();
-
             var deleteAddress = _commandFactory.MakeCommand<DeleteAddressCommand>();
-            try
-            {
-                deleteAddress.Execute(addressId);
-            }
-            catch (Exception e)
-            {
-                return BadRequest(e.Message);
-            }
+
+            deleteAddress.Execute(id);
 
             return Ok();
         }

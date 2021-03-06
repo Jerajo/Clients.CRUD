@@ -1,8 +1,10 @@
+import { Guid } from "guid-typescript";
+
 export type Client = {
-  id: string;
+  id: Guid;
   fullName: string;
   userName: string;
   email: string;
-  birthDay: string;
+  birthDay: Date;
   marriageStatus: string;
 };

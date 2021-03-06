@@ -22,12 +22,11 @@ namespace Clients.Application.Commands
 
         public void Execute(Guid clientId)
         {
-            if (clientId == Guid.Empty)
-                throw new Exception($"A valid client id was expected, but got: {clientId}");
-
             var transaction = _repository.GetTransaction();
 
-            _repository.Delete(new Client { Id = clientId });
+            var client = _repository.Get(c => c.Id == clientId);
+
+            client.DeleteFlag = "D";
 
             transaction.Commit();
         }

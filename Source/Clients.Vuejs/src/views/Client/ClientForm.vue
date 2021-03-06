@@ -36,12 +36,13 @@
             <div class="col-md-6">
               <input
                 v-model="client.userName"
-                class="form-control"
+                :disabled="isEditing"
+                :class="isEditing ? 'form-control disabled' : 'form-control'"
                 placeholder="User Name"
                 required
               />
               <span class="text-danger">
-                {{ errors[1] }}
+                {{ errors[0] }}
               </span>
             </div>
           </div>
@@ -58,12 +59,14 @@
               <input
                 type="email"
                 v-model="client.email"
+                :disabled="isEditing"
+                :class="isEditing ? 'form-control disabled' : 'form-control'"
                 class="form-control"
                 placeholder="E-Mail"
                 required
               />
               <span class="text-danger">
-                {{ errors[2] }}
+                {{ errors[0] }}
               </span>
             </div>
           </div>
@@ -79,12 +82,13 @@
             <div class="col-md-6">
               <input
                 type="date"
+                id="datePicker"
                 v-model="client.birthDay"
                 class="form-control"
                 required
               />
               <span class="text-danger">
-                {{ errors[3] }}
+                {{ errors[0] }}
               </span>
             </div>
           </div>
@@ -109,17 +113,22 @@
                 <option value="M">Married</option>
               </select>
               <span class="text-danger">
-                {{ errors[4] }}
+                {{ errors[0] }}
               </span>
             </div>
           </div>
         </ValidationProvider>
 
-        <input
-          type="submit"
-          v-model="buttonText"
-          class="btn btn-outline-primary my-3"
-        />
+        <div class="d-flex fle-row">
+          <a @click="goBack" class="btn btn-outline-secondary my-3">
+            Go Back
+          </a>
+          <input
+            type="submit"
+            class="btn btn-outline-primary my-3 mx-3"
+            v-model="buttonText"
+          />
+        </div>
       </form>
     </ValidationObserver>
   </div>
@@ -128,87 +137,95 @@
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
 import { Client } from "../../models/Client";
+import { handleError } from "../../helpers";
 import { WebClient, Endpoints } from "../../helpers/WebClient";
+import { Guid } from "guid-typescript";
 
 @Component
 export default class ClientForm extends Vue {
   client = this.getClient();
   webClient = new WebClient();
   title = "";
-  buttonText = "Create Client";
-  id: string | undefined;
+  buttonText = "Continue";
+  clientId: string | undefined;
+  isEditing = false;
 
   mounted() {
-    if (typeof this.$route.query.id == "string") {
-      this.id = this.$route.query.id as string;
-      this.buttonText = "Edit Client";
+    this.title = this.$route.query.operation + " Client";
+
+    const clientId = this.$route.query.clientId;
+
+    if (clientId && typeof clientId === "string") {
+      this.clientId = clientId;
+      this.buttonText = "Save changes";
     }
 
-    this.title = this.$route.query["operation"] + " Client";
+    this.isEditing = this.clientId != undefined;
 
-    if (this.id && typeof this.id == "string") this.fetchClient(this.id);
+    if (this.clientId) this.fetchClient(this.clientId);
   }
 
   fetchClient(id: string) {
     this.webClient
       .GET(`${Endpoints.Clients}/${id}`)
-      .then(async value => {
-        this.client = (await value.json()) as Client;
+      .then(value => {
+        this.client = value.data as Client;
+        console.log(this.client);
       })
-      .catch(reason => {
-        console.error(reason);
-      });
+      .catch(handleError);
   }
 
   getClient(): Client {
     const client = {
-      id: "",
+      id: Guid.parse(Guid.EMPTY),
       fullName: "",
       userName: "",
       email: "",
-      birthDay: "1991-09-30T13:49:26.908",
+      birthDay: new Date(),
       marriageStatus: ""
     };
 
     return client;
   }
 
+  onSubmitForm() {
+    if (this.isEditing) {
+      this.webClient
+        .PUT(`${Endpoints.Clients}/${this.clientId}`, this.client)
+        .then(() => {
+          this.continue();
+        })
+        .catch(handleError);
+    } else {
+      this.webClient
+        .POST(Endpoints.Clients, this.client)
+        .then(() => {
+          this.continue();
+        })
+        .catch(handleError);
+    }
+  }
+
   goBack() {
     this.$router.back();
   }
 
-  onSubmitForm() {
-    debugger;
-    this.client.birthDay = "1991-09-30T13:49:26.908";
-    const body = JSON.stringify(this.client);
-    console.log(body);
-
-    if (this.id) {
-      this.webClient
-        .PUT(`${Endpoints.Clients}/${this.id}`, body)
-        .then(() => {
-          this.goBack();
-        })
-        .catch(reason => {
-          console.error(reason);
-        });
+  continue() {
+    if (this.isEditing) {
+      this.$router.back();
     } else {
-      this.webClient
-        .POST(Endpoints.Clients, body)
-        .then(() => {
-          this.goBack();
-        })
-        .catch(reason => {
-          console.error(reason);
-        });
+      const clientId = this.client.id.toString();
+      this.$router.push({
+        path: "/address-create",
+        query: { clientId }
+      });
     }
-  }
-
-  convert(str: string) {
-    const date = new Date(str),
-      mnth = ("0" + (date.getMonth() + 1)).slice(-2),
-      day = ("0" + date.getDate()).slice(-2);
-    return [date.getFullYear(), mnth, day].join("-");
   }
 }
 </script>
+
+<style scoped>
+.disabled {
+  background-color: lightgrey;
+}
+</style>
