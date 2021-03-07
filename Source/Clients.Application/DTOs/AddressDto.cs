@@ -3,9 +3,31 @@
 namespace Clients.Application.DTOs
 {
     /// <summary>
-    /// Represents a costumer's address for the business.
+    /// Represents a client's address entity with all its public attributes.
     /// </summary>
-    public class AddressDto : BaseDto<Guid>
+    public class AddressDto : AddressCreateDto
+    {
+        /// <summary>
+        /// The entity unique identifier.
+        /// </summary>
+        public Guid Id { get; set; }
+    }
+
+    /// <summary>
+    /// Represents a client's address entity with only the attributes needed to create one.
+    /// </summary>
+    public class AddressCreateDto : AddressUpdateDto
+    {
+        /// <summary>
+        /// The FK to reference the client's address.
+        /// </summary>
+        public Guid ClientId { get; set; }
+    }
+
+    /// <summary>
+    /// Represents a client's address entity with only the attributes needed to update one.
+    /// </summary>
+    public class AddressUpdateDto
     {
         /// <summary>
         /// The current client's country name.
@@ -36,10 +58,5 @@ namespace Clients.Application.DTOs
         /// The client's address description 2nd line.
         /// </summary>
         public string AddressLineTwo { get; set; }
-
-        /// <summary>
-        /// The FK to reference the client's address.
-        /// </summary>
-        public Guid ClientId { get; set; }
     }
 }
