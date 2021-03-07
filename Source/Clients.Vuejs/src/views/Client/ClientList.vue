@@ -10,6 +10,7 @@
     </button>
     <div v-if="loading">
       <h2>Loading clients...</h2>
+      <b-icon icon="arrow-clockwise" font-scale="7.5" animation="spin"></b-icon>
     </div>
     <div v-else-if="hasClients === false" class="text-md-center">
       <h2>There are not clients on the list yet.</h2>
@@ -18,37 +19,34 @@
       <table class="table table-striped">
         <thead>
           <tr class="thead-light">
-            <th scope="col">Full Name</th>
             <th scope="col">User Name</th>
             <th scope="col">EMail</th>
             <th scope="col">Birth Day</th>
-            <th scope="col">Marriage Status</th>
             <th scope="col">Action</th>
           </tr>
         </thead>
         <tbody>
           <tr v-for="client in clients" :key="client.id">
-            <td>{{ client.fullName }}</td>
             <td>{{ client.userName }}</td>
             <td>{{ client.email }}</td>
             <td>{{ client.birthDay }}</td>
-            <td>{{ client.marriageStatus }}</td>
             <td>
-              <div class="flex-column">
+              <div class="column">
                 <button
                   @click="goToClientForm(client.id)"
-                  class="btn btn-outline-success"
+                  class="btn btn-outline-success d-inline"
                 >
-                  <i class="bi bi-pencil-fill"></i>
+                  <b-icon icon="pencil-fill"></b-icon>
                 </button>
                 <button
                   @click="deleteClient(client.id)"
-                  class="btn btn-outline-danger ms-2"
+                  class="btn btn-outline-danger ms-2 d-inline"
                 >
-                  <i class="bi bi-trash-fill"></i>
+                  <b-icon icon="trash-fill"></b-icon>
                 </button>
               </div>
             </td>
+            <div v-for="address in client.addresses" :key="address.id"></div>
           </tr>
         </tbody>
       </table>
