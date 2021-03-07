@@ -179,11 +179,8 @@ export default class ClientForm extends Vue {
 
     if (clientId && Guid.isGuid(clientId)) {
       this.isEditing = true;
-      this.clientId = clientId as string;
       this.buttonText = "Save changes";
-    }
-
-    if (this.clientId) {
+      this.clientId = clientId as string;
       this.fetchClient(this.clientId);
     }
   }
@@ -205,7 +202,7 @@ export default class ClientForm extends Vue {
       email: "",
       birthDay: null,
       marriageStatus: "",
-      addresses: null
+      addresses: []
     };
 
     return client;
@@ -222,8 +219,9 @@ export default class ClientForm extends Vue {
     } else {
       this.webClient
         .POST(Endpoints.Clients, this.client)
-        .then(() => {
-          this.continue();
+        .then(value => {
+          const client = value.data as Client;
+          this.continue(client.id);
         })
         .catch(handleError);
     }
@@ -233,15 +231,15 @@ export default class ClientForm extends Vue {
     this.$router.back();
   }
 
-  continue() {
-    if (this.isEditing) {
-      this.$router.back();
-    } else {
-      const clientId = this.client.id.toString();
+  continue(id: Guid | null = null) {
+    if (id) {
+      const clientId = id.toString();
       this.$router.push({
         path: "/address-create",
         query: { clientId }
       });
+    } else {
+      this.$router.back();
     }
   }
 }

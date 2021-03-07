@@ -8,5 +8,5 @@ export type Client = {
   email: string;
   birthDay: Date | null;
   marriageStatus: string;
-  addresses: Address[] | null;
+  addresses: Address[];
 };
