@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 
 using Clients.Application.Commands;
@@ -20,7 +21,8 @@ namespace Clients.Api.Controllers
             var getClients = _queryFactory.MakeQuery<GetClientsQuery>();
 
             var clients = getClients.Execute(c =>
-                string.IsNullOrEmpty(c.DeleteFlag));
+                string.IsNullOrEmpty(c.DeleteFlag) &&
+                (c.Addresses.Any(a => string.IsNullOrEmpty(a.DeleteFlag)) || true));
 
             return Ok(clients);
         }
@@ -28,7 +30,7 @@ namespace Clients.Api.Controllers
         [HttpGet("{id}")]
         public IActionResult GetClientById([FromRoute, FromQuery] Guid id)
         {
-            var getClientById = _queryFactory.MakeQuery<GetClientByIdQuery>();
+            var getClientById = _queryFactory.MakeQuery<GetClientByQuery>();
 
             var client = getClientById.Execute(c =>
                     c.Id == id &&
@@ -44,10 +46,12 @@ namespace Clients.Api.Controllers
         public IActionResult CreateClient([FromBody] ClientForCreationDto clientDto)
         {
             var createClient = _commandFactory.MakeCommand<CreateClientCommand>();
-
             createClient.Execute(clientDto);
 
-            return Ok();
+            var getClient = _queryFactory.MakeQuery<GetClientByQuery>();
+            var client = getClient.Execute(c => c.UserName == clientDto.UserName);
+
+            return Ok(client);
         }
 
         [HttpPut("{id}")]
