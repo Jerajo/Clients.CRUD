@@ -19,7 +19,8 @@ namespace Clients.Api.Controllers
         {
             var getClients = _queryFactory.MakeQuery<GetClientsQuery>();
 
-            var clients = getClients.Execute(c => string.IsNullOrEmpty(c.DeleteFlag));
+            var clients = getClients.Execute(c =>
+                string.IsNullOrEmpty(c.DeleteFlag));
 
             return Ok(clients);
         }

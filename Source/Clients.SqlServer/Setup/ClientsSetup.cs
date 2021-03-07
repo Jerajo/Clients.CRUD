@@ -46,7 +46,9 @@ namespace Clients.SqlServer.Setup
                 .IsRequired();
 
             modelBuilder.Entity<Client>()
-                .HasMany(c => c.Addresses);
+                .HasMany(c => c.Addresses)
+                .WithOne(a => a.Client)
+                .OnDelete(DeleteBehavior.Cascade);
         }
     }
 }
