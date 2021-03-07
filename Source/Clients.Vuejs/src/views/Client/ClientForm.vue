@@ -78,15 +78,17 @@
           v-slot="{ errors }"
         >
           <div class="form-group mb-3">
-            <label class="control-label">Birth Day</label>
+            <label for="birthDay" class="control-label">Birth Day</label>
             <div class="col-md-6">
-              <input
-                type="date"
-                id="datePicker"
+              <b-form-datepicker
+                id="birthDay"
+                :min="minDate"
+                :max="maxDate"
+                :state="isDateValid"
+                :show-decade-nav="true"
+                locale="en"
                 v-model="client.birthDay"
-                class="form-control"
-                required
-              />
+              ></b-form-datepicker>
               <span class="text-danger">
                 {{ errors[0] }}
               </span>
@@ -149,19 +151,26 @@ export default class ClientForm extends Vue {
   buttonText = "Continue";
   clientId: string | undefined;
   isEditing = false;
+  minDate: Date;
+  maxDate: Date;
+
+  get isDateValid(): boolean | null {
+    const isValid = this.client.birthDay != null;
+    return isValid ? null : isValid;
+  }
 
   mounted() {
     this.title = this.$route.query.operation + " Client";
+    this.minDate = new Date("01/01/1900");
+    this.maxDate = new Date();
 
     const clientId = this.$route.query.clientId;
 
-    if (clientId && typeof clientId === "string") {
+    if (Guid.isGuid(clientId)) {
+      this.isEditing = true;
       this.clientId = clientId;
       this.buttonText = "Save changes";
     }
-
-    this.isEditing = this.clientId != undefined;
-
     if (this.clientId) this.fetchClient(this.clientId);
   }
 
@@ -181,7 +190,7 @@ export default class ClientForm extends Vue {
       fullName: "",
       userName: "",
       email: "",
-      birthDay: new Date(),
+      birthDay: null,
       marriageStatus: ""
     };
 
@@ -224,8 +233,11 @@ export default class ClientForm extends Vue {
 }
 </script>
 
-<style scoped>
+<style>
 .disabled {
   background-color: lightgrey;
+}
+.row {
+  margin: 0px;
 }
 </style>
