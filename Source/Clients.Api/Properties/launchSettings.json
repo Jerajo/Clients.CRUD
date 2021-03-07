@@ -27,6 +27,16 @@
       "dotnetRunMessages": "true",
       "applicationUrl": "http://10.0.0.2:8080"
     },
+    "Clients.Api.MOCK": {
+      "commandName": "Project",
+      "launchBrowser": true,
+      "launchUrl": "swagger",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "MOCK"
+      },
+      "dotnetRunMessages": "true",
+      "applicationUrl": "http://10.0.0.2:8080"
+    },
     "Clients.Api.Production": {
       "commandName": "Project",
       "launchBrowser": false,
