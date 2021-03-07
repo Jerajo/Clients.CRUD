@@ -30,8 +30,9 @@ namespace Clients.Api
         public void ConfigureServices(IServiceCollection services)
         {
 #if MOCK
-            services.AddDbContext<ApplicationDBContext>(options =>
-                            options.UseSqlite("Data Source=sqlite.db"));
+            services.AddDbContext<ApplicationDBContext>(options => options
+                .UseLazyLoadingProxies()
+                .UseSqlite("Data Source=sqlite.db"));
             // If you want to do a quick test.
             // services.AddDbContext<ApplicationDBContext>(options =>
             //                 options.UseInMemoryDatabase("applicationDb"));
@@ -42,19 +43,6 @@ namespace Clients.Api
                                 sql => sql.MigrationsAssembly(migrationsAssembly))
                                 .UseLazyLoadingProxies());
 #endif
-
-            services.AddCors(options =>
-            {
-                options.AddDefaultPolicy(
-                    builder =>
-                    {
-                        // builder.WithOrigins("http://10.0.0.2:8081",
-                        //                     "http://localhost::8081");
-                        builder.AllowAnyOrigin()
-                            .AllowAnyHeader()
-                            .AllowAnyMethod();
-                    });
-            });
 
             services.AddControllers(
                 options =>
@@ -114,7 +102,10 @@ namespace Clients.Api
 
             app.UseRouting();
 
-            app.UseCors();
+            app.UseCors(builder => builder
+                .AllowAnyOrigin()
+                .AllowAnyHeader()
+                .AllowAnyMethod());
 
             app.UseAuthorization();
 

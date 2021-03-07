@@ -1,9 +1,10 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace Clients.Application.DTOs
 {
     /// <summary>
-    /// Represents a costumer for the business.
+    /// Represents a client entity with all its public attributes.
     /// </summary>
     public class ClientDto : ClientForCreationDto
     {
@@ -11,8 +12,16 @@ namespace Clients.Application.DTOs
         /// The entity unique identifier.
         /// </summary>
         public Guid Id { get; set; }
+
+        /// <summary>
+        /// Holds the client associated addres list.
+        /// </summary>
+        public virtual List<AddressDto> Addresses { get; set; }
     }
 
+    /// <summary>
+    /// Represents a client entity with only the attributes needed to create one.
+    /// </summary>
     public class ClientForCreationDto : ClientForEditionDto
     {
         /// <summary>
@@ -25,6 +34,10 @@ namespace Clients.Application.DTOs
         /// </summary>
         public string Email { get; set; }
     }
+
+    /// <summary>
+    /// Represents a client entity with only the attributes needed to update one.
+    /// </summary>
     public class ClientForEditionDto
     {
         /// <summary>

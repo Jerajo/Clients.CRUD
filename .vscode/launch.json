@@ -30,15 +30,13 @@
       "request": "launch",
       "program": "${workspaceFolder}/temp_data/bin/MOCK/Clients.Api/Clients.Api.dll",
       "preLaunchTask": "build-mock",
-      "args": [
-        "--configuration",
-        "MOCK"
-      ],
+      "args": ["--configuration", "MOCK"],
       "cwd": "${workspaceFolder}",
       "stopAtEntry": false,
       "serverReadyAction": {
         "action": "openExternally",
-        "pattern": "\\\\bNow listening on:\\\\s+(https?://\\\\S+)"
+        "uriFormat": "http://10.0.0.2:8080",
+        "pattern": "listening on port ([0-9]+)"
       },
       "env": {
         "ASPNETCORE_ENVIRONMENT": "MOCK"
