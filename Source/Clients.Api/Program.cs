@@ -1,13 +1,13 @@
 using System.Linq;
-using Clients.SqlServer;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
 using Serilog;
-using Serilog.Events;
 using Serilog.Sinks.SystemConsole.Themes;
+
+using Clients.SqlServer;
 
 namespace Clients.Api
 {
@@ -17,11 +17,13 @@ namespace Clients.Api
         {
             Log.Logger = new LoggerConfiguration()
                 .MinimumLevel.Information()
-                // .MinimumLevel.Override("Microsoft", LogEventLevel.Warning)
-                // .MinimumLevel.Override("System", LogEventLevel.Warning)
-                // .MinimumLevel.Override("Microsoft.AspNetCore.Authentication", LogEventLevel.Information)
-                .WriteTo.Console(outputTemplate: "[{Timestamp:HH:mm:ss} {Level}] {SourceContext}{NewLine}{Message:lj}{NewLine}{Exception}{NewLine}", theme: AnsiConsoleTheme.Literate)
-                .WriteTo.File("serverAPI_e_logs", Serilog.Events.LogEventLevel.Error, outputTemplate: "{Timestamp:yyyy-MM-dd HH:mm:ss.fff zzz} [{Level:u3}] {Message:lj}{NewLine}{Exception}")
+                .WriteTo.Console(
+                    outputTemplate: "[{Timestamp:HH:mm:ss} {Level}] {SourceContext}{NewLine}{Message:lj}{NewLine}{Exception}{NewLine}",
+                    theme: AnsiConsoleTheme.Literate)
+                .WriteTo.File(
+                    "serverAPI_e_logs",
+                    Serilog.Events.LogEventLevel.Error,
+                    outputTemplate: "{Timestamp:yyyy-MM-dd HH:mm:ss.fff zzz} [{Level:u3}] {Message:lj}{NewLine}{Exception}")
                 .CreateLogger();
 
             try
@@ -30,7 +32,7 @@ namespace Clients.Api
                 var host = CreateHostBuilder(args).Build();
                 Log.Information("Host builded.");
 
-                if (args.Any(x => x.Contains("MOCK")))
+                if (args.Any(x => x.Contains("migrate")))
                     MigrateDataBase(host);
 
                 Log.Information("Host runing...");

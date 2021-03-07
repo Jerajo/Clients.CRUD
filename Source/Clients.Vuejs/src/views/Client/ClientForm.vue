@@ -145,14 +145,27 @@ import { Guid } from "guid-typescript";
 
 @Component
 export default class ClientForm extends Vue {
-  client = this.getClient();
-  webClient = new WebClient();
-  title = "";
-  buttonText = "Continue";
-  clientId: string | undefined;
-  isEditing = false;
+  title: string;
+  buttonText: string;
+  isEditing: boolean;
   minDate: Date;
   maxDate: Date;
+  client: Client;
+  webClient: WebClient;
+  clientId: string | undefined;
+
+  constructor() {
+    super();
+
+    this.title = "";
+    this.buttonText = "Continue";
+    this.isEditing = false;
+    this.minDate = new Date("01/01/1900");
+    this.maxDate = new Date();
+
+    this.webClient = new WebClient();
+    this.client = this.getClient();
+  }
 
   get isDateValid(): boolean | null {
     const isValid = this.client.birthDay != null;
@@ -161,10 +174,8 @@ export default class ClientForm extends Vue {
 
   mounted() {
     this.title = this.$route.query.operation + " Client";
-    this.minDate = new Date("01/01/1900");
-    this.maxDate = new Date();
 
-    const clientId = this.$route.query.clientId;
+    const clientId = this.$route.query.clientId as string;
 
     if (Guid.isGuid(clientId)) {
       this.isEditing = true;
