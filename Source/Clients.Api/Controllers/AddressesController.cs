@@ -19,7 +19,8 @@ namespace Clients.Api.Controllers
         {
             var getAddresses = _queryFactory.MakeQuery<GetAddressesQuery>();
 
-            var addresses = getAddresses.Execute(x => true);
+            var addresses = getAddresses.Execute(a =>
+                string.IsNullOrEmpty(a.DeleteFlag));
 
             return Ok(addresses);
         }
@@ -27,9 +28,11 @@ namespace Clients.Api.Controllers
         [HttpGet("{id}")]
         public IActionResult GetAddressById([FromRoute, FromQuery] Guid id)
         {
-            var getAddressById = _queryFactory.MakeQuery<GetAddressByIdQuery>();
+            var getAddressById = _queryFactory.MakeQuery<GetAddressByQuery>();
 
-            var address = getAddressById.Execute(x => x.Id == id);
+            var address = getAddressById.Execute(a =>
+                a.Id == id &&
+                string.IsNullOrEmpty(a.DeleteFlag));
 
             if (address is null)
                 return NotFound();
@@ -38,7 +41,7 @@ namespace Clients.Api.Controllers
         }
 
         [HttpPost]
-        public IActionResult CreateAddress([FromBody] AddressDto addressDto)
+        public IActionResult CreateAddress([FromBody] AddressForCreationDto addressDto)
         {
             var createAddress = _commandFactory.MakeCommand<CreateAddressCommand>();
 
@@ -48,11 +51,11 @@ namespace Clients.Api.Controllers
         }
 
         [HttpPut("{id}")]
-        public IActionResult UpdateAddressById([FromRoute, FromQuery] Guid id, [FromBody] AddressDto addressDto)
+        public IActionResult UpdateAddressById([FromRoute, FromQuery] Guid id, [FromBody] AddressForEditionDto addressDto)
         {
             var updateAddress = _commandFactory.MakeCommand<UpdateAddressCommand>();
 
-            updateAddress.Execute(addressDto);
+            updateAddress.Execute((id, addressDto));
 
             return Ok();
         }

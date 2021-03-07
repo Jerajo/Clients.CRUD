@@ -8,15 +8,6 @@ using Clients.Application.DTOs;
 
 namespace Clients.Api.Validations
 {
-    public class GuidValidator : AbstractValidator<Guid>
-    {
-        public GuidValidator()
-        {
-            RuleFor(guid => guid)
-                .NotEqual(Guid.Empty);
-        }
-    }
-
     public class ClientForCreationDtoValidation : AbstractValidator<ClientForCreationDto>
     {
         public ClientForCreationDtoValidation(IRepository<Client> repository)
