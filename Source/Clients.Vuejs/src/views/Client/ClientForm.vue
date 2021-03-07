@@ -172,17 +172,20 @@ export default class ClientForm extends Vue {
     return isValid ? null : isValid;
   }
 
-  mounted() {
+  created() {
     this.title = this.$route.query.operation + " Client";
 
-    const clientId = this.$route.query.clientId as string;
+    const clientId = this.$route.query.clientId;
 
-    if (Guid.isGuid(clientId)) {
+    if (clientId && Guid.isGuid(clientId)) {
       this.isEditing = true;
-      this.clientId = clientId;
+      this.clientId = clientId as string;
       this.buttonText = "Save changes";
     }
-    if (this.clientId) this.fetchClient(this.clientId);
+
+    if (this.clientId) {
+      this.fetchClient(this.clientId);
+    }
   }
 
   fetchClient(id: string) {
@@ -190,19 +193,19 @@ export default class ClientForm extends Vue {
       .GET(`${Endpoints.Clients}/${id}`)
       .then(value => {
         this.client = value.data as Client;
-        console.log(this.client);
       })
       .catch(handleError);
   }
 
   getClient(): Client {
-    const client = {
+    const client: Client = {
       id: Guid.parse(Guid.EMPTY),
       fullName: "",
       userName: "",
       email: "",
       birthDay: null,
-      marriageStatus: ""
+      marriageStatus: "",
+      addresses: null
     };
 
     return client;

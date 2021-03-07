@@ -3,7 +3,7 @@
     <h1 class="my-4">Client List</h1>
     <button
       id="createButton"
-      @click="goToClientForm"
+      @click="goToClientForm(null)"
       class="btn btn-success mx-auto mb-4"
     >
       Create new client
@@ -46,7 +46,6 @@
                 </button>
               </div>
             </td>
-            <div v-for="address in client.addresses" :key="address.id"></div>
           </tr>
         </tbody>
       </table>
@@ -59,12 +58,21 @@ import { Component, Vue } from "vue-property-decorator";
 import { Client } from "../../models/Client";
 import { handleError } from "../../helpers";
 import { WebClient, Endpoints } from "../../helpers/WebClient";
+import { Guid } from "guid-typescript";
 
 @Component
 export default class ClientList extends Vue {
-  loading = true;
-  clients: Client[] = [];
+  loading: boolean;
+  clients: Client[];
   webClient = new WebClient();
+
+  constructor() {
+    super();
+
+    this.loading = true;
+    this.clients = [];
+    this.webClient = new WebClient();
+  }
 
   get hasClients() {
     const result = this.clients.length > 0;
@@ -88,8 +96,9 @@ export default class ClientList extends Vue {
       });
   }
 
-  goToClientForm(clientId: string | undefined = undefined) {
-    const operation = typeof clientId === "string" ? "Edit" : "Create";
+  goToClientForm(id: Guid | null) {
+    const clientId = id ? id.toString() : null;
+    const operation = clientId ? "Edit" : "Create";
 
     this.$router.push({
       path: "/client-create",
@@ -97,11 +106,11 @@ export default class ClientList extends Vue {
     });
   }
 
-  deleteClient(clientId: string) {
+  deleteClient(clientId: Guid) {
     this.webClient
       .DELETE(`${Endpoints.Clients}/${clientId}`)
       .then(() => {
-        this.clients = this.clients.filter(x => x.id.toString() !== clientId);
+        this.clients = this.clients.filter(x => x.id !== clientId);
       })
       .catch(handleError);
   }
