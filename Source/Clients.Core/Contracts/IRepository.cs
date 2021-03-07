@@ -17,6 +17,9 @@ namespace Clients.Core.Contracts
         IQueryable<TEntity> GetAll();
         Task<IQueryable<TEntity>> GetAllAsync();
         List<TEntity> Query(Func<TEntity, bool> query);
+        List<TResult> Query<TResult>(Func<TEntity, bool> query,
+            Func<TEntity, TResult> select)
+            where TResult : IEntity<Guid>;
         Task<List<TEntity>> QueryAsync(Func<TEntity, bool> query);
 
         bool Any(Func<TEntity, bool> query = null);
