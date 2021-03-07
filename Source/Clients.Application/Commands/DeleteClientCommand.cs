@@ -26,6 +26,11 @@ namespace Clients.Application.Commands
 
             var client = _repository.Get(c => c.Id == clientId);
 
+            foreach (var address in client.Addresses)
+            {
+                address.DeleteFlag = "D";
+            }
+
             client.DeleteFlag = "D";
 
             transaction.Commit();

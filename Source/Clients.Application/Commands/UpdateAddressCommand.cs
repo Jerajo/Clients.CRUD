@@ -1,12 +1,15 @@
-﻿using Ardalis.GuardClauses;
+﻿using System;
+
+using Ardalis.GuardClauses;
 using AutoMapper;
+
 using Clients.Application.DTOs;
 using Clients.Core.Contracts;
 using Clients.Core.Entities;
 
 namespace Clients.Application.Commands
 {
-    public class UpdateAddressCommand : ICommand<AddressDto>
+    public class UpdateAddressCommand : ICommand<(Guid, AddressForEditionDto)>
     {
         private readonly IRepository<Address> _repository;
         private readonly IMapper _mapper;
@@ -20,13 +23,13 @@ namespace Clients.Application.Commands
             _mapper = mapper;
         }
 
-        public void Execute(AddressDto model)
+        public void Execute((Guid, AddressForEditionDto) modelData)
         {
-            Guard.Against.Null(model, nameof(model));
+            Guard.Against.Null(modelData, nameof(modelData));
 
-            var address = _repository.Get(x => x.Id == model.Id);
+            (Guid addressId, AddressForEditionDto model) = modelData;
 
-            Guard.Against.Null(address, nameof(address));
+            var address = _repository.Get(x => x.Id == addressId);
 
             _mapper.Map(model, address);
 

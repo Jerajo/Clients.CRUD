@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+
 using Clients.Application.DTOs;
 using Clients.Core.Entities;
 
@@ -12,6 +13,9 @@ namespace Clients.Application.Profiles
                 .ForMember(address => address.Id, action => action.Ignore());
 
             CreateMap<Address, AddressDto>();
+
+            CreateMap<AddressForCreationDto, Address>();
+            CreateMap<AddressForEditionDto, Address>();
         }
     }
 }

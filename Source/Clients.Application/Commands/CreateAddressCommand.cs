@@ -6,7 +6,7 @@ using Clients.Core.Entities;
 
 namespace Clients.Application.Commands
 {
-    public class CreateAddressCommand : ICommand<AddressDto>
+    public class CreateAddressCommand : ICommand<AddressForCreationDto>
     {
         private readonly IRepository<Address> _repository;
         private readonly IMapper _mapper;
@@ -20,7 +20,7 @@ namespace Clients.Application.Commands
             _mapper = mapper;
         }
 
-        public void Execute(AddressDto model)
+        public void Execute(AddressForCreationDto model)
         {
             Guard.Against.Null(model, nameof(model));
 
