@@ -132,7 +132,7 @@ namespace Clients.SqlServer.Services
         #endregion
 
 
-        #region PUT/PACH
+        #region PUT/PATCH
 
         public void Update(TEntity entity)
         {
