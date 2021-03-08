@@ -235,7 +235,7 @@ export default class ClientForm extends Vue {
     if (id) {
       const clientId = id.toString();
       this.$router.push({
-        path: "/address-create",
+        path: "/address-form",
         query: { clientId }
       });
     } else {

@@ -200,7 +200,7 @@ export default class ClientList extends Vue {
     const operation = clientId ? "Edit" : "Create";
 
     this.$router.push({
-      path: "/client-create",
+      path: "/client-form",
       query: { operation, clientId }
     });
   }
@@ -211,7 +211,7 @@ export default class ClientList extends Vue {
     const clientId = targetClientId.toString();
 
     this.$router.push({
-      path: "/address-create",
+      path: "/address-form",
       query: { operation, clientId, addressId }
     });
   }

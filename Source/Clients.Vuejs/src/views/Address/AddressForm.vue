@@ -241,7 +241,7 @@ export default class AddressForm extends Vue {
     if (this.isEditing) {
       this.$router.back();
     } else {
-      this.$router.push({ path: "/client-list" });
+      this.$router.push({ path: "/" });
     }
   }
 }
