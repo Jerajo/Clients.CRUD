@@ -5,7 +5,7 @@ namespace Clients.Application.DTOs
     /// <summary>
     /// Represents a client's address entity with all its public attributes.
     /// </summary>
-    public class AddressDto : AddressCreateDto
+    public class AddressDto : AddressForCreationDto
     {
         /// <summary>
         /// The entity unique identifier.
@@ -16,7 +16,7 @@ namespace Clients.Application.DTOs
     /// <summary>
     /// Represents a client's address entity with only the attributes needed to create one.
     /// </summary>
-    public class AddressCreateDto : AddressUpdateDto
+    public class AddressForCreationDto : AddressForEditionDto
     {
         /// <summary>
         /// The FK to reference the client's address.
@@ -27,7 +27,7 @@ namespace Clients.Application.DTOs
     /// <summary>
     /// Represents a client's address entity with only the attributes needed to update one.
     /// </summary>
-    public class AddressUpdateDto
+    public class AddressForEditionDto
     {
         /// <summary>
         /// The current client's country name.

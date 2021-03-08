@@ -145,33 +145,44 @@ import { Guid } from "guid-typescript";
 
 @Component
 export default class ClientForm extends Vue {
-  client = this.getClient();
-  webClient = new WebClient();
-  title = "";
-  buttonText = "Continue";
-  clientId: string | undefined;
-  isEditing = false;
+  title: string;
+  buttonText: string;
+  isEditing: boolean;
   minDate: Date;
   maxDate: Date;
+  client: Client;
+  webClient: WebClient;
+  clientId: string | undefined;
+
+  constructor() {
+    super();
+
+    this.title = "";
+    this.buttonText = "Continue";
+    this.isEditing = false;
+    this.minDate = new Date("01/01/1900");
+    this.maxDate = new Date();
+
+    this.webClient = new WebClient();
+    this.client = this.getClient();
+  }
 
   get isDateValid(): boolean | null {
     const isValid = this.client.birthDay != null;
     return isValid ? null : isValid;
   }
 
-  mounted() {
+  created() {
     this.title = this.$route.query.operation + " Client";
-    this.minDate = new Date("01/01/1900");
-    this.maxDate = new Date();
 
     const clientId = this.$route.query.clientId;
 
-    if (Guid.isGuid(clientId)) {
+    if (clientId && Guid.isGuid(clientId)) {
       this.isEditing = true;
-      this.clientId = clientId;
       this.buttonText = "Save changes";
+      this.clientId = clientId as string;
+      this.fetchClient(this.clientId);
     }
-    if (this.clientId) this.fetchClient(this.clientId);
   }
 
   fetchClient(id: string) {
@@ -179,19 +190,19 @@ export default class ClientForm extends Vue {
       .GET(`${Endpoints.Clients}/${id}`)
       .then(value => {
         this.client = value.data as Client;
-        console.log(this.client);
       })
       .catch(handleError);
   }
 
   getClient(): Client {
-    const client = {
+    const client: Client = {
       id: Guid.parse(Guid.EMPTY),
       fullName: "",
       userName: "",
       email: "",
       birthDay: null,
-      marriageStatus: ""
+      marriageStatus: "",
+      addresses: []
     };
 
     return client;
@@ -208,8 +219,9 @@ export default class ClientForm extends Vue {
     } else {
       this.webClient
         .POST(Endpoints.Clients, this.client)
-        .then(() => {
-          this.continue();
+        .then(value => {
+          const client = value.data as Client;
+          this.continue(client.id);
         })
         .catch(handleError);
     }
@@ -219,15 +231,15 @@ export default class ClientForm extends Vue {
     this.$router.back();
   }
 
-  continue() {
-    if (this.isEditing) {
-      this.$router.back();
-    } else {
-      const clientId = this.client.id.toString();
+  continue(id: Guid | null = null) {
+    if (id) {
+      const clientId = id.toString();
       this.$router.push({
-        path: "/address-create",
+        path: "/address-form",
         query: { clientId }
       });
+    } else {
+      this.$router.back();
     }
   }
 }

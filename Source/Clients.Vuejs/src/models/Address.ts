@@ -8,5 +8,5 @@ export type Address = {
   postalCode: number;
   addressLineOne: string;
   addressLineTwo: string;
-  clientId: Guid;
+  clientId: string;
 };

@@ -50,6 +50,18 @@ namespace Clients.SqlServer.Services
             return _dBContext.Set<TEntity>().Where(query).ToList();
         }
 
+        public List<TResult> Query<TResult>(Func<TEntity, bool> query,
+            Func<TEntity, TResult> select)
+            where TResult : IEntity<Guid>
+        {
+            var result = _dBContext.Set<TEntity>()
+                .Where(query)
+                .Select(select)
+                .ToList();
+
+            return result;
+        }
+
         public Task<List<TEntity>> QueryAsync(Func<TEntity, bool> query)
         {
             return AsyncOperation.FromResult(Query(query));

@@ -1,11 +1,11 @@
-﻿using Clients.Application.DTOs;
+using Clients.Application.DTOs;
 using FluentValidation;
 
 namespace Clients.Api.Validations
 {
-    public class AddressDtoValidation : AbstractValidator<AddressDto>
+    public class AddressForEditionDtoValidation : AbstractValidator<AddressForEditionDto>
     {
-        public AddressDtoValidation()
+        public AddressForEditionDtoValidation()
         {
             RuleFor(address => address.AddressLineOne)
                 .NotNull()
@@ -41,11 +41,6 @@ namespace Clients.Api.Validations
                 .NotNull()
                 .InclusiveBetween(10000u, 99999u)
                 .WithErrorCode("1010");
-
-            RuleFor(address => address.ClientId)
-                .NotNull()
-                .NotEmpty()
-                .WithErrorCode("1011");
         }
     }
 }

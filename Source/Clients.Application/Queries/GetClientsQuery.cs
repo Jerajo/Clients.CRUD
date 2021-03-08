@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Ardalis.GuardClauses;
 using AutoMapper;
 using Clients.Application.DTOs;
@@ -26,7 +27,16 @@ namespace Clients.Application.Queries
         {
             Guard.Against.Null(query, nameof(query));
 
-            var clients = _repository.Query(query);
+            var clients = _repository.Query(query,
+                c => new Client {
+                    Id = c.Id,
+                    FullName = c.FullName,
+                    UserName = c.UserName,
+                    Email = c.Email,
+                    BirthDay = c.BirthDay,
+                    MarriageStatus = c.MarriageStatus,
+                    Addresses = c.Addresses.Where(a => string.IsNullOrEmpty(a.DeleteFlag))
+                });
 
             var clientsDto = _mapper.Map<List<ClientDto>>(clients);
 

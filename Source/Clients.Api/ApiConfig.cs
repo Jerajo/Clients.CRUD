@@ -23,10 +23,10 @@ namespace Clients.Api
         public static void ConfigIoCForQueries(this IServiceCollection services)
         {
             services.AddScoped<GetClientsQuery>();
-            services.AddScoped<GetClientByIdQuery>();
+            services.AddScoped<GetClientByQuery>();
 
             services.AddScoped<GetAddressesQuery>();
-            services.AddScoped<GetAddressByIdQuery>();
+            services.AddScoped<GetAddressByQuery>();
         }
 
         public static void ConfigIoCForFactories(this IServiceCollection services)

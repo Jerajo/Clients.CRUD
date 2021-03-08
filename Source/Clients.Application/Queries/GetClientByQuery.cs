@@ -7,12 +7,12 @@ using Clients.Core.Entities;
 
 namespace Clients.Application.Queries
 {
-    public class GetClientByIdQuery : BaseQuery<Func<Client, bool>, ClientDto>
+    public class GetClientByQuery : BaseQuery<Func<Client, bool>, ClientDto>
     {
         private readonly IRepository<Client> _repository;
         private readonly IMapper _mapper;
 
-        public GetClientByIdQuery(IRepository<Client> repository, IMapper mapper)
+        public GetClientByQuery(IRepository<Client> repository, IMapper mapper)
         {
             Guard.Against.Null(repository, nameof(repository));
             Guard.Against.Null(mapper, nameof(mapper));

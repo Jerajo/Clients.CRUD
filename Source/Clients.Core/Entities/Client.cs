@@ -36,7 +36,7 @@ namespace Clients.Core.Entities
         /// <summary>
         /// Lazily loads all client's addresses.
         /// </summary>
-        public virtual ICollection<Address> Addresses { get; set; }
+        public virtual IEnumerable<Address> Addresses { get; set; }
 
     }
 }

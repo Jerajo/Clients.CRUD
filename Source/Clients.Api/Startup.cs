@@ -49,7 +49,7 @@ namespace Clients.Api
                 {
                     options.Filters.Add<ValidationResultAttribute>();
                 })
-                .AddFluentValidation(fv => fv.RegisterValidatorsFromAssemblyContaining<AddressDtoValidation>());
+                .AddFluentValidation(fv => fv.RegisterValidatorsFromAssemblyContaining<GuidValidator>());
 
             services.AddHttpContextAccessor();
 

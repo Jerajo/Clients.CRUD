@@ -5,7 +5,7 @@
       <form action="none" @submit.prevent="handleSubmit(onSubmitForm)">
         <ValidationProvider
           name="County"
-          rules="required|max:150"
+          rules="required|alpha_spaces|max:100"
           v-slot="{ errors }"
         >
           <div class="form-group mb-3">
@@ -13,7 +13,7 @@
             <div class="col-md-6">
               <input
                 type="text"
-                v-model="address.county"
+                v-model="address.country"
                 class="form-control"
                 placeholder="County Name"
                 required
@@ -27,7 +27,7 @@
 
         <ValidationProvider
           name="State"
-          rules="required|max:35"
+          rules="required|alpha_spaces|max:100"
           v-slot="{ errors }"
         >
           <div class="form-group mb-3">
@@ -49,7 +49,7 @@
 
         <ValidationProvider
           name="City"
-          rules="required|email|max:150"
+          rules="required|alpha_spaces|max:100"
           v-slot="{ errors }"
         >
           <div class="form-group mb-3">
@@ -93,7 +93,7 @@
 
         <ValidationProvider
           name="Address Line One"
-          rules="required|max(250)"
+          rules="required|max:250"
           v-slot="{ errors }"
         >
           <div class="form-group mb-3">
@@ -115,7 +115,7 @@
 
         <ValidationProvider
           name="Address Line Two"
-          rules="required|max(250)"
+          rules="required|max:250"
           v-slot="{ errors }"
         >
           <div class="form-group mb-3">
@@ -136,7 +136,7 @@
         </ValidationProvider>
 
         <div class="d-flex fle-row">
-          <a @click="cancel" class="btn btn-outline-secondary my-3">
+          <a @click="goToClientList" class="btn btn-outline-secondary my-3">
             {{ cancelButtonText }}
           </a>
           <input
@@ -159,24 +159,39 @@ import { WebClient, Endpoints } from "../../helpers/WebClient";
 
 @Component
 export default class AddressForm extends Vue {
-  address = this.getAddress();
-  title = "Create Address";
-  cancelButtonText = "Cancel";
-  saveButtonText = "Add Address";
-  webClient = new WebClient();
-  isEditing = false;
+  title: string;
+  cancelButtonText: string;
+  saveButtonText: string;
+  isEditing: boolean;
+  address: Address;
+  webClient: WebClient;
+  addressId: string | undefined;
 
-  mounted() {
+  constructor() {
+    super();
+
+    this.title = "";
+    this.cancelButtonText = "Cancel";
+    this.saveButtonText = "Register Address";
+    this.isEditing = false;
+
+    this.webClient = new WebClient();
+    this.address = this.getAddress();
+  }
+
+  created() {
+    this.title = this.$route.query.operation + " Address";
     const clientId = this.$route.query.clientId as string;
-    const addressId = this.$route.query.addressId as string;
 
-    if (addressId) {
+    const addressId = this.$route.query.addressId;
+
+    if (addressId && Guid.isGuid(addressId)) {
       this.isEditing = true;
-      this.title = "Edit Address";
       this.saveButtonText = "Save Changes";
-      this.fetchAddress(addressId);
+      this.addressId = addressId as string;
+      this.fetchAddress(this.addressId);
     } else {
-      this.address.clientId = Guid.parse(clientId);
+      this.address.clientId = clientId;
     }
   }
 
@@ -185,7 +200,6 @@ export default class AddressForm extends Vue {
       .GET(`${Endpoints.Addresses}/${addressId}`)
       .then(value => {
         this.address = value.data as Address;
-        console.log(this.address);
       })
       .catch(handleError);
   }
@@ -199,21 +213,35 @@ export default class AddressForm extends Vue {
       postalCode: 10000,
       addressLineOne: "",
       addressLineTwo: "",
-      clientId: Guid.parse(Guid.EMPTY)
+      clientId: Guid.EMPTY
     };
 
     return address;
   }
 
   onSubmitForm() {
-    console.log("form submitted", this.address);
+    if (this.isEditing) {
+      this.webClient
+        .PUT(`${Endpoints.Addresses}/${this.addressId}`, this.address)
+        .then(() => {
+          this.goToClientList();
+        })
+        .catch(handleError);
+    } else {
+      this.webClient
+        .POST(Endpoints.Addresses, this.address)
+        .then(() => {
+          this.goToClientList();
+        })
+        .catch(handleError);
+    }
   }
 
-  cancel() {
+  goToClientList() {
     if (this.isEditing) {
       this.$router.back();
     } else {
-      this.$router.push({ path: "/client-list" });
+      this.$router.push({ path: "/" });
     }
   }
 }
