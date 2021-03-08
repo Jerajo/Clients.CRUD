@@ -6,43 +6,18 @@ Vue.use(VueRouter);
 const routes: Array<RouteConfig> = [
   {
     path: "/",
-    name: "Home",
-    component: () => import("../views/Home.vue")
-  },
-  {
-    path: "/client-list",
-    name: "ClientList",
+    name: "Client List",
     component: () => import("../views/Client/ClientList.vue")
   },
   {
-    path: "/client-create/",
-    name: "CreateClient",
+    path: "/client-form",
+    name: "Client Form",
     component: () => import("../views/Client/ClientForm.vue")
   },
   {
-    path: "/client-update",
-    name: "UpdateClient",
-    component: () => import("../views/Client/ClientForm.vue")
-  },
-  {
-    path: "/address-list",
-    name: "AddressList",
-    component: () => import("../views/Address/AddressList.vue")
-  },
-  {
-    path: "/address-create",
-    name: "CreateAddress",
+    path: "/address-form",
+    name: "Address Form",
     component: () => import("../views/Address/AddressForm.vue")
-  },
-  {
-    path: "/address-update",
-    name: "UpdateAddress",
-    component: () => import("../views/Address/AddressForm.vue")
-  },
-  {
-    path: "/about",
-    name: "About",
-    component: () => import("../views/About.vue")
   }
 ];
 
