@@ -1,14 +1,7 @@
 <template>
   <div id="app">
-    <div id="nav" class="nav nav-container bg-info">
-      <router-link class="nav nav-link" to="/">Home</router-link>
-      <router-link class="nav nav-link" to="/client-list"
-        >Client List</router-link
-      >
-      <router-link class="nav nav-link" to="/address-list"
-        >Addess List</router-link
-      >
-      <router-link class="nav nav-link" to="/about">About</router-link>
+    <div id="nav" class="nav nav-container">
+      <router-link class="nav nav-link" to="/">Client List</router-link>
     </div>
     <router-view />
   </div>
